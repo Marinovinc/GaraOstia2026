@@ -1,0 +1,19 @@
+{
+  "date": "2026-06-13",
+  "product": "MED_L4",
+  "dataset": "cmems_obs-oc_med_bgc-plankton_nrt_l4-gapfree-multi-1km_P1D_202207",
+  "variable": "CHL",
+  "bbox": {
+    "lon_min": 11.7167,
+    "lat_min": 41.3583,
+    "lon_max": 12.3333,
+    "lat_max": 41.7367
+  },
+  "zmin": 7,
+  "zmax": 11,
+  "tiles_total": 32,
+  "tiles_ok": 32,
+  "tiles_empty": 0,
+  "generated_utc": "2026-06-14T21:02:45.333106+00:00",
+  "source": "Copernicus Marine teroWmts (public, no auth)"
+}

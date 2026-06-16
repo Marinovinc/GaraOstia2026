@@ -1,0 +1,9 @@
+# Backup, artefatti di test, cache
+*.BAK_*
+_*.png
+_*.py
+__pycache__/
+_claude_write_test.txt
+
+# Log di sessione interno (non pubblicare)
+.claude_session_log_*.md

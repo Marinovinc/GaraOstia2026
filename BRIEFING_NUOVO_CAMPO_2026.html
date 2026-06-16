@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Briefing Tattico - Campo Ostia 2026</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, Arial, sans-serif; color: #1c2733; font-size: 11pt; line-height: 1.42; margin: 0; }
+  h1 { font-size: 19pt; color: #14533a; margin: 0 0 2px; }
+  h2 { font-size: 12.5pt; color: #14533a; border-bottom: 2px solid #1a7f4b; padding-bottom: 3px; margin: 16px 0 7px; page-break-after: avoid; }
+  .sub { color: #5a6b7a; font-size: 10pt; margin: 0 0 2px; }
+  .meta { color: #7a8a99; font-size: 8.5pt; margin: 0 0 10px; }
+  .hr { border-top: 3px solid #14533a; margin: 8px 0 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 9.7pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #c7d2dc; padding: 4px 7px; text-align: left; vertical-align: top; }
+  th { background: #eaf3ee; color: #14533a; font-weight: 600; }
+  .tag { font-size: 7.5pt; font-weight: 700; padding: 1px 5px; border-radius: 3px; vertical-align: middle; }
+  .dato { background: #1a7f4b; color: #fff; }
+  .prop { background: #d68a16; color: #fff; }
+  ul { margin: 4px 0 8px; padding-left: 18px; } li { margin: 2px 0; }
+  .box { border-left: 4px solid #1a7f4b; background: #f1f7f3; padding: 7px 11px; margin: 8px 0; border-radius: 0 5px 5px 0; page-break-inside: avoid; }
+  .warn { border-left-color: #c0392b; background: #fbf0ee; }
+  .warn b { color: #a93226; }
+  code { background: #eef2f6; padding: 0 3px; border-radius: 3px; font-size: 9.5pt; }
+  .sec { page-break-inside: avoid; }
+  footer { margin-top: 14px; border-top: 1px solid #c7d2dc; padding-top: 6px; color: #7a8a99; font-size: 8pt; }
+  .mono { font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+
+<h1>Briefing Tattico — Nuovo Campo Gara Ostia 2026</h1>
+<p class="sub">62&deg; Campionato Italiano Assoluto di Traina d'Altura — Roma / Ostia — ASD IschiaFishing</p>
+<p class="meta">Manche: Venerd&igrave; 26 e Sabato 27 giugno 2026 &middot; start 08:00&ndash;08:30 &middot; ~7h (&rarr;15:30) &middot; aggiornato 16/06/2026<br>
+Legenda: <span class="tag dato">DATO</span> misurato/verificato &middot; <span class="tag prop">PROPOSTA</span> ipotesi da validare in mare</p>
+<div class="hr"></div>
+
+<div class="sec">
+<h2>1. Il campo (capitolato ufficiale) <span class="tag dato">DATO</span></h2>
+<p>Quadrilatero a 4 vertici, <b>offshore SW di Ostia su acqua profonda</b> (96&ndash;1450 m). Non &egrave; pi&ugrave; il pentagono off-foce del 2025. Partenza/rientro: <b>Ostia</b> (NE). AMP Tor Paterno: ora <b>fuori campo</b> (riferimento, non vincolo).</p>
+<table>
+<tr><th>Vertice</th><th>Coordinate (plotter)</th><th>Decimale</th></tr>
+<tr><td>V1</td><td class="mono">N 41 42.222' &middot; E 012 00.163'</td><td class="mono">41.70370, 12.00272</td></tr>
+<tr><td>V2</td><td class="mono">N 41 32.224' &middot; E 012 05.885'</td><td class="mono">41.53707, 12.09808</td></tr>
+<tr><td>V3</td><td class="mono">N 41 28.657' &middot; E 011 53.087'</td><td class="mono">41.47762, 11.88478</td></tr>
+<tr><td>V4</td><td class="mono">N 41 37.827' &middot; E 011 46.426'</td><td class="mono">41.63045, 11.77377</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<h2>2. Le strutture del fondo (DEM EMODnet F5 ~115m) <span class="tag dato">DATO</span></h2>
+<p>Pesca <b>da struttura</b>: il fondo concentra il foraggio.</p>
+<table>
+<tr><th>Struttura</th><th>Posizione</th><th>Note</th></tr>
+<tr><td><b>Banco ~717 m</b></td><td class="mono">41.55417 N, 11.86146 E</td><td>rilievo isolato (prominenza 125 m), centro-SW. Linea-alalunga "alla Ischia".</td></tr>
+<tr><td><b>Drop-off / scarpata SW</b></td><td class="mono">~41.530 N, 11.873 E</td><td>pareti 34&ndash;76% a 774&ndash;987 m (max 76% @ 924 m). Spada profondo, alalunga sull'orlo.</td></tr>
+<tr><td><b>Rottura shelf NE ~148 m</b></td><td class="mono">~41.69 N, 12.05&ndash;12.10 E</td><td>gradino costiero, angolo NE vicino al porto di Roma.</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<h2>3. La clorofilla (campionata reale, gap-free Copernicus) <span class="tag dato">DATO</span></h2>
+<ul>
+<li>Campo <b>BLU oligotrofico</b>: CHL <b>0.02&ndash;0.08 mg/m&sup3;</b> ovunque. <b>Niente fronte verde forte da seguire</b>: il pennacchio del Tevere non arriva fin qui (troppo offshore).</li>
+<li><b>Pi&ugrave; produttivo = angolo NE/shelf</b> (CHL max ~0.077) &mdash; proprio dove la flotta ha preso i tonni sui 148 m.</li>
+<li><b>Pi&ugrave; blu = SW/S profondo</b> (banco, scarpata).</li>
+</ul>
+<div class="box"><b>Conseguenza:</b> i <b>tonni</b> (&times;2) stanno nell'acqua produttiva NE; <b>alalunga/spada</b> sulle strutture profonde in acqua blu (SW).</div>
+</div>
+
+<div class="sec">
+<h2>4. Marea e solunare (verificati) <span class="tag dato">DATO</span></h2>
+<table>
+<tr><th>Manche</th><th>Alta</th><th>Bassa</th><th>Solunare maggiore (mattino)</th></tr>
+<tr><td>Venerd&igrave; 26</td><td>07:54</td><td>14:09</td><td><b>09:17&ndash;11:17</b></td></tr>
+<tr><td>Sabato 27</td><td>08:42</td><td>14:49</td><td><b>10:06&ndash;12:06</b></td></tr>
+</table>
+<p>Escursione <b>~20 cm</b> (microtidale, motore minore). Il <b>riflusso domina la manche</b> (alta&rarr;bassa quasi per tutto il tempo). Solunare calcolato con effemeridi (antitransito lunare, Luna gibbosa 89&ndash;94%).</p>
+<div class="box"><b>Finestra d'oro:</b> solunare in riflusso, mattino calmo prima della brezza SW-W del pomeriggio. &Egrave; l&igrave; che bisogna essere sullo spot migliore.</div>
+</div>
+
+<div class="sec">
+<h2>5. Vento (previsione reale Open-Meteo) <span class="tag dato">DATO</span></h2>
+<p>Mattina calma; <b>brezza di mare SW-W che rinforza dal primo pomeriggio</b> (fino ~12 km/h alle 14). Il mare si alza: rientro NE a Ostia per tempo.</p>
+</div>
+
+<div class="sec">
+<h2>6. Le 3 rotte (timate su riflusso + solunare) <span class="tag prop">PROPOSTA</span></h2>
+<p>Tutte mettono lo <b>spot prime nel solunare in riflusso</b> (mattino).</p>
+<table>
+<tr><th>Rotta</th><th>Solunare su&hellip;</th><th>Poi</th><th>Per</th></tr>
+<tr><td><b>A &mdash; Produttivo NE poi scarpata</b> <i>(consigliata)</i></td><td>NE <b>in-campo</b> (produttivo)</td><td>banco / scarpata SW</td><td>tonni nel solunare, poi alalunga/spada</td></tr>
+<tr><td><b>B &mdash; Scarpata profonda</b></td><td>banco 717 m (blu)</td><td>drop-off / muri</td><td>alalunga / spada (acqua blu)</td></tr>
+<tr><td><b>C &mdash; Bordo NE in-campo</b></td><td>NE in-campo</td><td>bordo 200&ndash;300 m</td><td>tutto sui tonni</td></tr>
+</table>
+<div class="box warn"><b>Tutti i waypoint sono DENTRO il campo</b> e l'ultima passata resta <b>in pesca fino alle 15:30</b> (non si rientra prima). La rottura <b>148 m</b> piu' ricca (dove ha pescato la flotta) e' appena <b>FUORI</b> dal campo: dentro, lavora l'angolo NE.</div>
+</div>
+
+<div class="sec">
+<h2>7. Operativo &mdash; la sera prima della gara</h2>
+<ul>
+<li>Apri l'app, data = <b>Ieri</b> (oggi spesso non ancora pronto), prodotto = <b>Med L4 gapfree</b> (default, niente buchi).</li>
+<li>Modulo <b>Manche &amp; rotte</b> &rarr; <b>"Aggiorna su CHL di stasera"</b>: l'app campiona la clorofilla reale e marca il <b>PRIME</b> (zona pi&ugrave; produttiva del giorno). Porta l&igrave; lo spread nel solunare.</li>
+<li>Scegli rotta (A/B/C) e manche (Ven/Sab). Controlla <b>Previsione gara</b> (vento) e le finestre solunare/marea.</li>
+<li>In barca: <b>Modalit&agrave; barca</b> (snapshot offline) se non hai rete.</li>
+<li>Si pesca <b>fino alle 15:30</b> (7h piene): non rientrare prima dello scadere.</li>
+</ul>
+</div>
+
+<div class="sec">
+<h2>8. Affidabilit&agrave; (onesta)</h2>
+<table>
+<tr><th>Elemento</th><th>Livello</th></tr>
+<tr><td>Campo, strutture (DEM), clorofilla, marea, solunare</td><td><b>8&ndash;9 / 10</b> (dati / verificati)</td></tr>
+<tr><td>Rotte A/B/C</td><td><b>5 / 10</b> (proposte ragionate, NON validate in mare)</td></tr>
+</table>
+<div class="box warn"><b>Il pattern della clorofilla del 26&ndash;27 sar&agrave; diverso da oggi:</b> ricampiona la sera prima (pulsante in app) e ritara il PRIME.</div>
+</div>
+
+<div class="sec">
+<h2>9. La regola che vale per tutte</h2>
+<div class="box warn"><b>Appena qualcuno annuncia una mangianza alla radio, si molla il piano e si converge.</b> Il pesce che mangia batte qualsiasi mappa.</div>
+</div>
+
+<footer>
+ASD IschiaFishing &mdash; base dati: capitolato FIPSAS, EMODnet 2024, Copernicus Marine, Open-Meteo, effemeridi. Briefing tecnico equipaggio. App: D:\Dev\IschiaFishing
+</footer>
+
+</body>
+</html>

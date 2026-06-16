@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "name": "campo_gara_roma_ostia",
+  "note": "Costanti gara 62 Campionato Italiano Traina Altura Roma-Ostia 26-27/06/2026. Coordinate da brief (pentagono, AMP) e da tool sperimentale 2026-06-02 (hotspot/punti, DA RIVALIDARE). GeoJSON: [lon, lat].",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "campo_gara", "tipo": "campo", "nome": "Campo gara 2026 (quadrilatero)", "fonte": "Capitolato 62 CI - Campo Gara OSTIA" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [12.00272, 41.70370],
+          [12.09808, 41.53707],
+          [11.88478, 41.47762],
+          [11.77377, 41.63045],
+          [12.00272, 41.70370]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "amp_tor_paterno", "tipo": "divieto", "nome": "AMP Secche di Tor Paterno (DIVIETO)", "buffer_m": 500, "fonte": "brief" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [12.3417, 41.6217],
+          [12.3650, 41.6000],
+          [12.3250, 41.5750],
+          [12.3000, 41.5967],
+          [12.3417, 41.6217]
+        ]]
+      }
+    },
+    { "type": "Feature", "properties": { "id": "alpha", "tipo": "hotspot", "nome": "alpha - drop-off nord", "prof_m": 390, "nota": "11nm da Ostia; ARCHIVE da rivalidare" }, "geometry": { "type": "Point", "coordinates": [12.00, 41.60] } },
+    { "type": "Feature", "properties": { "id": "beta", "tipo": "hotspot", "nome": "beta - scarpata", "prof_m": 920, "nota": "22nm; ARCHIVE da rivalidare (brief 924m)" }, "geometry": { "type": "Point", "coordinates": [11.82, 41.45] } },
+    { "type": "Feature", "properties": { "id": "gamma", "tipo": "hotspot", "nome": "gamma - banco sud", "prof_m": 895, "nota": "ARCHIVE da rivalidare" }, "geometry": { "type": "Point", "coordinates": [11.88, 41.40] } },
+    { "type": "Feature", "properties": { "id": "foce_tevere", "tipo": "foce", "nome": "Foce Tevere (Fiumara Grande)", "nota": "ARCHIVE" }, "geometry": { "type": "Point", "coordinates": [12.2333, 41.7378] } },
+    { "type": "Feature", "properties": { "id": "partenza_ostia", "tipo": "partenza", "nome": "Ostia (PARTENZA / START)", "nota": "confermato dal briefing tattico Roma 2026" }, "geometry": { "type": "Point", "coordinates": [12.2430, 41.7450] } },
+    { "type": "Feature", "properties": { "id": "fiumicino", "tipo": "porto", "nome": "Fiumicino (Canale, bocca ovest Tevere)" }, "geometry": { "type": "Point", "coordinates": [12.2150, 41.7700] } },
+    { "type": "Feature", "properties": { "id": "lido_ostia", "tipo": "riferimento", "nome": "Lido di Ostia", "nota": "ARCHIVE" }, "geometry": { "type": "Point", "coordinates": [12.2800, 41.7330] } }
+  ]
+}

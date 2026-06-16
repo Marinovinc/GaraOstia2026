@@ -1,0 +1,15 @@
+{
+  "provider": "esri",
+  "name": "ESRI World Imagery (satellite)",
+  "bbox": {
+    "lon_min": 11.7738,
+    "lat_min": 41.4776,
+    "lon_max": 12.0981,
+    "lat_max": 41.7037
+  },
+  "zmin": 7,
+  "zmax": 12,
+  "tiles_total": 39,
+  "tiles_ok": 39,
+  "generated_utc": "2026-06-16T10:34:41.401128+00:00"
+}

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<!--
+  =============================================================================
+  App: IschiaFishing - Campionato Italiano Traina Altura
+  File: index.html (app autonoma, single-file - convenzione app satellitari)
+  Creato: 2026-06-14
+  Descrizione: mappa clorofilla/SST sul campo gara Roma-Ostia, valore al click,
+               calcolo fronte (color line), layer gara, near-real-time.
+  Dipendenze locali (offline): lib/leaflet.js, lib/leaflet.css, campo_gara.js
+  Motore dati ADATTATO (non importato) dal riferimento D:\Dev\Clorofilla.
+  =============================================================================
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0d1626">
+<link rel="manifest" href="manifest.webmanifest">
+<title>IschiaFishing - Campionato Italiano Traina Altura</title>
+<link rel="stylesheet" href="lib/leaflet.css">
+<style>
+  :root { --bg:#0d1626; --panel:#13213a; --accent:#27c46b; --accent2:#e94560; --txt:#e8eef6; --divieto:#ff3b3b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; font-family:"Segoe UI", system-ui, sans-serif; color:var(--txt); }
+  #map { position:absolute; inset:0; background:#0a1120; }
+  #panel {
+    position:absolute; top:10px; left:10px; z-index:1000; width:310px; max-width:calc(100vw - 20px);
+    max-height:calc(100vh - 20px); overflow-y:auto;
+    background:rgba(19,33,58,0.96); border:1px solid #24375c; border-radius:10px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.5); padding:12px 14px; backdrop-filter:blur(4px);
+  }
+  #panel h1 { font-size:15px; margin:0 0 2px; color:var(--accent); letter-spacing:.3px; }
+  #panel .sub { font-size:11px; color:#9fb0c8; margin:0 0 10px; }
+  #panel label { display:block; font-size:11px; color:#9fb0c8; margin:8px 0 3px; text-transform:uppercase; letter-spacing:.4px; }
+  #panel select, #panel input[type=date] {
+    width:100%; padding:7px 8px; border-radius:6px; border:1px solid #2c416c; background:#0e1b30; color:var(--txt); font-size:13px;
+  }
+  .row { display:flex; gap:6px; } .row > * { flex:1; }
+  .quickdates { display:flex; gap:5px; margin-top:6px; flex-wrap:wrap; }
+  .quickdates button, #geoBtn, #toggleBtn, #frontBtn, #expCsv, #expKml, #fitBtn {
+    cursor:pointer; border:1px solid #2c416c; background:#16284a; color:var(--txt); border-radius:6px; padding:6px 9px; font-size:12px;
+  }
+  .quickdates button:hover, #geoBtn:hover, #frontBtn:hover, #fitBtn:hover, #expCsv:hover, #expKml:hover { background:#1e3a63; }
+  .quickdates button.active { background:var(--accent); color:#06210f; border-color:var(--accent); font-weight:600; }
+  #frontBtn, #fitBtn, #geoBtn { width:100%; margin-top:8px; }
+  hr.sep { border:none; border-top:1px solid #24375c; margin:12px 0 4px; }
+  .chkrow { display:flex; align-items:center; gap:7px; margin:5px 0; }
+  .chkrow label { margin:0; text-transform:none; color:var(--txt); font-size:12px; }
+  input[type=range] { -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:4px; background:#2c416c; outline:none; padding:0; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); cursor:pointer; }
+  #datainfo { margin-top:10px; font-size:12px; color:#bcd; background:#0e1b30; border-radius:6px; padding:7px 9px; border-left:3px solid var(--accent); }
+  #datainfo b { color:var(--accent); }
+  .nrt { font-size:10px; color:#e0b35a; margin-top:4px; }
+  .desc { font-size:10.5px; color:#8095ad; margin-top:4px; line-height:1.35; }
+  .hint { font-size:10.5px; color:#7088a8; margin:2px 0 8px; }
+  .sec { border-top:1px solid #24375c; }
+  .sec-h { width:100%; text-align:left; cursor:pointer; background:none; border:none; color:var(--accent);
+    font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.4px; padding:10px 2px;
+    display:flex; justify-content:space-between; align-items:center; }
+  .sec-h::after { content:'+'; color:#9fb0c8; font-size:15px; line-height:1; }
+  .sec.open > .sec-h::after { content:'\2212'; }
+  .sec-h:hover { color:#5fe39a; }
+  .sec-b { display:none; padding:0 2px 10px; }
+  .sec.open > .sec-b { display:block; }
+  .wrow { display:flex; align-items:center; gap:8px; font-size:12px; padding:3px 4px; border-radius:5px; }
+  .wrow.sol { background:rgba(255,215,0,0.12); }
+  .wt { width:42px; color:#bcd; }
+  .warr { display:inline-block; width:16px; text-align:center; color:#7fc7ff; }
+  .wsp { flex:1; }
+  .wfl { font-size:10px; color:#e0b35a; }
+  .wsum { font-size:11px; color:#bcd; background:#0e1b30; border-left:3px solid var(--accent); border-radius:6px; padding:7px 9px; margin:6px 0; }
+  #legend { position:absolute; bottom:18px; right:10px; z-index:1000; background:rgba(19,33,58,0.95);
+    border:1px solid #24375c; border-radius:10px; padding:9px 12px; font-size:11px; box-shadow:0 4px 16px rgba(0,0,0,0.5); }
+  #legend .title { font-size:11px; color:#9fb0c8; margin-bottom:5px; text-transform:uppercase; letter-spacing:.4px; }
+  #legbar { width:170px; height:13px; border-radius:3px; border:1px solid #2c416c;
+    background:linear-gradient(90deg,#000080,#0040ff,#00c0ff,#00e000,#e0e000,#ff6000,#a00000); }
+  #legend .lbls { display:flex; justify-content:space-between; margin-top:3px; color:#bcd; }
+  #toggleBtn { position:absolute; top:10px; right:10px; z-index:1001; display:none; }
+  #coordbox { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); z-index:1000;
+    background:rgba(13,22,38,0.85); color:#bfe3ff; border:1px solid #2c416c; border-radius:6px;
+    padding:3px 9px; font-size:11px; font-family:Consolas,monospace; pointer-events:none; }
+  .seg-label { background:rgba(13,22,38,0.88); border:1px solid #2c416c; color:#ffd24a; font-size:10px; padding:0 4px; border-radius:4px; white-space:nowrap; }
+  #map.ruler { cursor: crosshair; }
+  #rulerClear { width:100%; margin-top:6px; cursor:pointer; border:1px solid #2c416c; background:#16284a; color:var(--txt); border-radius:6px; padding:6px 9px; font-size:12px; }
+  .leaflet-popup-content { font-size:13px; }
+  .hotspot-label { background:rgba(13,22,38,0.85); border:1px solid #2c416c; color:#ffd700; font-size:11px; padding:1px 5px; border-radius:4px; }
+  @media (max-width:640px) {
+    #panel { width:calc(100vw - 20px); transform:translateY(0); transition:transform .25s; }
+    #panel.collapsed { transform:translateY(-130%); }
+    #toggleBtn { display:block; }
+    #legend { bottom:10px; left:10px; right:auto; }
+    #legbar { width:130px; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<button id="toggleBtn">Filtri</button>
+<div id="coordbox">-</div>
+
+<div id="panel">
+  <h1>IschiaFishing - Campionato Italiano Traina Altura</h1>
+  <p class="sub">Campo gara Roma-Ostia - clorofilla/SST satellitare (near-real-time)</p>
+
+  <p class="hint">Apri un modulo per attivarne i comandi.</p>
+
+  <div class="sec open">
+    <button class="sec-h" type="button">Mappa &amp; dato</button>
+    <div class="sec-b">
+      <label for="productSelect">Sorgente satellitare</label>
+      <select id="productSelect"></select>
+      <div class="desc" id="prodDesc"></div>
+      <label for="dateSelect">Data del dato</label>
+      <input type="date" id="dateSelect">
+      <div class="quickdates" id="quickDates"></div>
+      <label>Opacita overlay</label>
+      <input type="range" id="opacity" min="0" max="100" value="85">
+      <label>Luminosita mappa base</label>
+      <input type="range" id="brightness" min="60" max="230" value="100">
+      <div id="datainfo">Dato mostrato: <b id="shownDate">-</b><br>
+        <span style="font-size:11px;color:#9fb0c8">Clicca un punto in mare per leggere il valore (mg/m&sup3;).</span>
+        <div class="nrt">Dato giornaliero near-real-time: non istantaneo. Si traina sul LATO BLU del fronte.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <button class="sec-h" type="button">Layer gara</button>
+    <div class="sec-b">
+      <div class="chkrow"><input type="checkbox" id="lyBathy" checked><label for="lyBathy">Batimetria EMODnet (fondali)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyIso" checked><label for="lyIso">Isobate EMODnet (DEM 100-1000m)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyDrop" checked><label for="lyDrop">Drop-off / scarpate (DEM)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyCampo" checked><label for="lyCampo">Campo gara 2026 (quadrilatero)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyFlotta" checked><label for="lyFlotta">Punti flotta (reali)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyAmp"><label for="lyAmp">AMP Tor Paterno (fuori campo)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyHot"><label for="lyHot">Hotspot (vecchio campo)</label></div>
+      <div class="chkrow"><input type="checkbox" id="lyPunti" checked><label for="lyPunti">Foce / porti</label></div>
+      <button id="fitBtn">Inquadra campo gara</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <button class="sec-h" type="button">Manche &amp; rotte (gara)</button>
+    <div class="sec-b">
+      <div class="chkrow"><input type="checkbox" id="frontMoveChk"><label for="frontMoveChk">Rotta di traina + spot</label></div>
+      <select id="routeSel" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:6px;border:1px solid #2c416c;background:#0e1b30;color:var(--txt);font-size:12px;"></select>
+      <select id="mancheSel" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:6px;border:1px solid #2c416c;background:#0e1b30;color:var(--txt);font-size:12px;"></select>
+      <div class="desc" id="mancheInfo">-</div>
+      <div class="row" style="align-items:center;gap:8px;margin-top:4px;">
+        <button id="fmPlay" style="flex:0 0 40px;cursor:pointer;border:1px solid #2c416c;background:#16284a;color:var(--txt);border-radius:6px;padding:6px 0;font-size:13px;">&#9654;</button>
+        <input type="range" id="fmSlider" style="flex:1;">
+      </div>
+      <div class="quickdates" style="justify-content:space-between;color:#8095ad;font-size:10.5px;"><span>08:00</span><span id="fmTime">-</span><span>15:30</span></div>
+      <div class="desc" id="fmTip">Campo BLU oligotrofico (CHL 0.02-0.08): produttivo NE/shelf (tonni), blu SW (alalunga/spada). Spot oro = solunare. PROPOSTA - ricampiona la CHL la sera prima.</div>
+      <button id="chlUpdateBtn" style="width:100%;margin-top:8px;cursor:pointer;border:1px solid #2c416c;background:#16284a;color:var(--txt);border-radius:6px;padding:6px 9px;font-size:12px;">Aggiorna su CHL di stasera</button>
+      <div class="desc" id="chlNote">Campiona la clorofilla del giorno selezionato e marca la zona piu' produttiva (PRIME) dove portare lo spread nel solunare.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <button class="sec-h" type="button">Previsione gara (vento reale)</button>
+    <div class="sec-b">
+      <button id="fcLoad" style="width:100%;cursor:pointer;border:1px solid #2c416c;background:#16284a;color:var(--txt);border-radius:6px;padding:6px 9px;font-size:12px;">Carica previsione vento (manche selezionata)</button>
+      <div class="desc" id="fcNote">Vento previsto (Open-Meteo) per il giorno della manche. Stima a giorni: si aggiorna ogni giorno.</div>
+      <div id="fcOut"></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <button class="sec-h" type="button">Strumenti</button>
+    <div class="sec-b">
+      <div class="chkrow"><input type="checkbox" id="sstChk"><label for="sstChk">Temperatura mare (SST) sopra</label></div>
+      <button id="frontBtn">Calcola fronte (vista attuale)</button>
+      <div class="desc" id="frontInfo">Il fronte (color line) e' il bordo tra acqua ricca e povera: campiona la vista corrente su un prodotto Mediterraneo.</div>
+      <div class="row" style="margin-top:8px;">
+        <button id="expCsv">Esporta punti CSV</button>
+        <button id="expKml">Esporta fronte KML</button>
+      </div>
+      <button id="geoBtn">Dove sono (posizione attuale)</button>
+      <hr class="sep">
+      <div class="chkrow"><input type="checkbox" id="rulerChk"><label for="rulerChk">Righello: misura distanze</label></div>
+      <button id="rulerClear">Pulisci righello</button>
+      <div class="desc" id="rulerNote">Spunta e clicca i punti sul mare: misura ogni tratto e il totale (nm). Doppio-click o "Pulisci" per azzerare.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <button class="sec-h" type="button">Modalita barca (offline)</button>
+    <div class="sec-b">
+      <div class="chkrow"><input type="checkbox" id="offlineChk"><label for="offlineChk">Usa snapshot locale (senza rete)</label></div>
+      <button id="prepOfflineBtn" style="width:100%;margin-top:6px;cursor:pointer;border:1px solid #2c416c;background:#16284a;color:var(--txt);border-radius:6px;padding:6px 9px;font-size:12px;">Prepara offline (scarica nella cache)</button>
+      <div class="desc" id="offlineInfo">-</div>
+    </div>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="title">Clorofilla mg/m&sup3; (scala log)</div>
+  <div id="legbar"></div>
+  <div class="lbls"><span>bassa</span><span>media</span><span>alta</span></div>
+</div>
+
+<script src="lib/leaflet.js"></script>
+<script src="campo_gara.js"></script>
+<script src="front_drift.js"></script>
+<script src="gara_plan.js"></script>
+<script src="isobate.js"></script>
+<script src="dropoff.js"></script>
+<script>
+"use strict";
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// === CATALOGO SORGENTI (adattato da Clorofilla) ===
+const WMTS_BASE = 'https://wmts.marine.copernicus.eu/teroWmts';
+const GIBS_WMS  = 'https://gibs.earthdata.nasa.gov/wms/epsg3857/best/wms.cgi';
+const PRODUCTS = {
+  MED_L4: { kind:'chl', name:'Mediterraneo L4 gapfree 1km', product:'OCEANCOLOUR_MED_BGC_L4_NRT_009_142',
+    dataset:'cmems_obs-oc_med_bgc-plankton_nrt_l4-gapfree-multi-1km_P1D_202207', variable:'CHL', style:'cmap:jet,logScale',
+    cadence:'daily', point:true, desc:'Solo Med. Senza buchi (nuvole interpolate). Lettura puntuale. Default consigliato.' },
+  MED_L3: { kind:'chl', name:'Mediterraneo L3 1km (osservato)', product:'OCEANCOLOUR_MED_BGC_L3_NRT_009_141',
+    dataset:'cmems_obs-oc_med_bgc-plankton_nrt_l3-multi-1km_P1D_202211', variable:'CHL', style:'cmap:jet,logScale',
+    cadence:'daily', point:true, desc:'Dato diretto Sentinel-3 (con buchi nuvole). Lettura puntuale.' },
+  MED_HR: { kind:'chl', name:'Mediterraneo HR 100m costa (mensile)', product:'OCEANCOLOUR_MED_BGC_HR_L4_NRT_009_211',
+    dataset:'cmems_obs-oc_med_bgc-tur-spm-chl_nrt_l4-hr-mosaic_P1M-m_202511', variable:'CHL', style:'cmap:jet,logScale',
+    cadence:'monthly', point:true, desc:'Costa Med, dettaglio 100m, media MENSILE (anche TUR/SPM).' },
+  PACE_GLOBAL: { kind:'chl', name:'NASA PACE - globale (~4km)', type:'wms', wmsUrl:GIBS_WMS, wmsLayer:'OCI_PACE_Chlorophyll_a',
+    variable:'CHL', cadence:'daily', point:false, desc:'Copertura mondiale. Buchi=nuvole. Niente lettura puntuale.' },
+  SST_L4: { kind:'sst', name:'SST L4 6km (temperatura)', product:'SST_MED_PHY_SUBSKIN_L4_NRT_010_036',
+    dataset:'cmems_obs-sst_med_phy-sst_nrt_diurnal-oi-0.0625deg_PT1H-m_202105', variable:'analysed_sst', style:'cmap:thermal',
+    cadence:'daily', point:true, desc:'Temperatura mare L4 (solo Med, ~6km).' }
+};
+function getTimeStr(key, date){ return PRODUCTS[key].cadence === 'monthly' ? date.slice(0,7)+'-01' : date; }
+
+// === MAPPA (centro sul campo gara) ===
+const CAMPO_CENTER = [41.587, 11.940];
+const map = L.map('map', { worldCopyJump:true }).setView(CAMPO_CENTER, 9);
+map.createPane('chlPane'); map.getPane('chlPane').style.zIndex = 350;  // clorofilla/SST sopra la batimetria EMODnet
+map.createPane('bathyPane'); map.getPane('bathyPane').style.zIndex = 250;  // batimetria: pane proprio (NON sbiadita dalla luminosita base, che agisce solo sul tilePane)
+const baseLayers = {
+  'Scuro (CartoDB)': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'&copy; OpenStreetMap, &copy; CARTO', maxZoom:18 }),
+  'Satellite (ESRI)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution:'&copy; Esri', maxZoom:18 }),
+  'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 })
+};
+baseLayers['Satellite (ESRI)'].addTo(map);
+L.control.layers(baseLayers, null, { position:'topright', collapsed:true }).addTo(map);
+// Batimetria EMODnet (multicolour) - qualita carta nautica, fondali del campo profondo
+const bathy = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
+  layers:'emodnet:mean_multicolour', format:'image/png', transparent:true, opacity:0.95,
+  maxZoom:18, pane:'bathyPane', attribution:'&copy; EMODnet Bathymetry' });
+bathy.addTo(map);
+
+// === LAYER GARA (da campo_gara.js) ===
+const gara = { campo:L.layerGroup(), amp:L.layerGroup(), hot:L.layerGroup(), punti:L.layerGroup(), flotta:L.layerGroup() };
+let campoBounds = null;
+(function buildGara(){
+  const fc = window.CAMPO_GARA;
+  if (!fc){ console.warn('campo_gara.js non caricato'); return; }
+  const toLatLng = ring => ring.map(c => [c[1], c[0]]);
+  fc.features.forEach(f => {
+    const p = f.properties, g = f.geometry;
+    if (p.id === 'campo_gara'){
+      const poly = L.polygon(toLatLng(g.coordinates[0]), { color:'#27c46b', weight:2, fill:true, fillOpacity:0.04 })
+        .bindPopup('<b>Campo gara 2026</b><br>Quadrilatero (capitolato 62 CI - Ostia)');
+      poly.addTo(gara.campo); campoBounds = poly.getBounds();
+    } else if (p.id === 'amp_tor_paterno'){
+      L.polygon(toLatLng(g.coordinates[0]), { color:'var(--divieto)', weight:2, fillColor:'#ff3b3b', fillOpacity:0.22, dashArray:'4 3' })
+        .bindPopup('<b style="color:#ff6b6b">AMP Secche di Tor Paterno - DIVIETO</b><br>Zona vietata + buffer 500m (approssimato visivamente)').addTo(gara.amp);
+    } else if (p.tipo === 'hotspot'){
+      L.circleMarker([g.coordinates[1], g.coordinates[0]], { radius:7, color:'#ffd700', weight:2, fillColor:'#ffd700', fillOpacity:0.55 })
+        .bindPopup('<b style="color:#ffd700">'+esc(p.nome)+'</b><br>Prof. ~'+p.prof_m+'m<br><small>'+esc(p.nota||'')+'</small>')
+        .bindTooltip(p.id, { permanent:true, direction:'right', className:'hotspot-label' }).addTo(gara.hot);
+    } else if (p.tipo === 'zona'){
+      L.circle([g.coordinates[1], g.coordinates[0]], { radius:p.raggio_m||1000, color:'#00e0ff', weight:2, fillColor:'#00e0ff', fillOpacity:0.12, dashArray:'5 4' })
+        .bindPopup('<b style="color:#7fe8ff">'+esc(p.nome)+'</b><br><small>'+esc(p.nota||'')+'</small>').addTo(gara.flotta);
+    } else if (p.tipo === 'flotta'){
+      const conf = !/stima/i.test(p.nota||'');
+      L.circleMarker([g.coordinates[1], g.coordinates[0]], { radius: conf?8:6, color:'#ff3b6b', weight:2, fillColor:'#ff3b6b', fillOpacity: conf?0.85:0.4, dashArray: conf?null:'2 2' })
+        .bindPopup('<b style="color:#ff6b8b">'+esc(p.nome)+'</b><br><small>'+esc(p.nota||'')+'</small>').addTo(gara.flotta);
+    } else {
+      const col = p.tipo === 'partenza' ? '#00bfff' : (p.tipo === 'foce' ? '#00e000' : (p.tipo === 'porto' ? '#7aa7c7' : '#aabbcc'));
+      const rad = p.tipo === 'partenza' ? 8 : 6;
+      L.circleMarker([g.coordinates[1], g.coordinates[0]], { radius:rad, color:col, weight:2, fillColor:col, fillOpacity:0.75 })
+        .bindPopup('<b>'+esc(p.nome)+'</b>'+(p.nota?'<br><small>'+esc(p.nota)+'</small>':'')).addTo(gara.punti);
+    }
+  });
+  // aggiungi alla mappa solo i layer con checkbox attiva (rispetta i default off di AMP/hotspot)
+  [['lyCampo',gara.campo],['lyFlotta',gara.flotta],['lyAmp',gara.amp],['lyHot',gara.hot],['lyPunti',gara.punti]]
+    .forEach(([id,grp]) => { const c = document.getElementById(id); if (!c || c.checked) grp.addTo(map); });
+})();
+function bindLayerToggle(id, grp){
+  document.getElementById(id).addEventListener('change', e => { e.target.checked ? grp.addTo(map) : map.removeLayer(grp); });
+}
+bindLayerToggle('lyCampo', gara.campo); bindLayerToggle('lyAmp', gara.amp);
+bindLayerToggle('lyHot', gara.hot); bindLayerToggle('lyPunti', gara.punti); bindLayerToggle('lyFlotta', gara.flotta);
+document.getElementById('lyBathy').addEventListener('change', e => { e.target.checked ? bathy.addTo(map) : map.removeLayer(bathy); });
+// === ISOBATE EMODnet (da isobate.js) ===
+const ISO_STYLE = { 50:{c:'#cfeeff',w:1.1}, 100:{c:'#9fe8ff',w:1.5}, 200:{c:'#7fd8ff',w:2}, 500:{c:'#5ab0ff',w:1.8}, 1000:{c:'#3a86ff',w:1.8}, 1500:{c:'#6a7adf',w:1.4} };
+const isoLayer = L.layerGroup();
+(window.ISOBATE || []).forEach(ln => {
+  const st = ISO_STYLE[ln.el] || { c:'#5fc8ff', w:1.3 };
+  const ll = ln.c.map(p => [p[1], p[0]]);
+  L.polyline(ll, { color:st.c, weight:st.w, opacity:0.85 }).addTo(isoLayer);
+  const mid = ll[Math.floor(ll.length/2)];
+  L.marker(mid, { icon:L.divIcon({ className:'', html:'<span style="color:'+st.c+';font-size:10px;font-weight:700;text-shadow:0 0 3px #000,0 0 2px #000">'+ln.el+' m</span>', iconSize:[34,12], iconAnchor:[17,6] }), interactive:false }).addTo(isoLayer);
+});
+if (document.getElementById('lyIso').checked) isoLayer.addTo(map);
+document.getElementById('lyIso').addEventListener('change', e => { e.target.checked ? isoLayer.addTo(map) : map.removeLayer(isoLayer); });
+// === DROP-OFF / scarpate (da dropoff.js, DEM) ===
+const dropLayer = L.layerGroup();
+(window.DROPOFF || []).forEach(d => {
+  L.circleMarker([d.lat, d.lon], { radius:7, color:'#ff8c1a', weight:2, fillColor:'#ff8c1a', fillOpacity:0.6 })
+    .bindPopup('<b style="color:#ffb05a">Drop-off (scarpata)</b><br>Pendenza ' + d.slope_pct + '%<br>Prof. ~' + d.prof_m + ' m')
+    .bindTooltip(d.slope_pct + '%', { permanent:false, direction:'top' }).addTo(dropLayer);
+});
+if (document.getElementById('lyDrop').checked) dropLayer.addTo(map);
+document.getElementById('lyDrop').addEventListener('change', e => { e.target.checked ? dropLayer.addTo(map) : map.removeLayer(dropLayer); });
+document.getElementById('fitBtn').addEventListener('click', () => { if (campoBounds) map.fitBounds(campoBounds, { padding:[30,30] }); });
+
+// === OVERLAY CLOROFILLA + SST ===
+let chlLayer = null, sstLayer = null;
+function curOpacity(){ return (+document.getElementById('opacity').value)/100; }
+function buildWmtsTemplate(key){
+  const p = PRODUCTS[key];
+  return WMTS_BASE + '?service=WMTS&version=1.0.0&request=GetTile' +
+    '&layer=' + p.product + '/' + p.dataset + '/' + p.variable + '&style=' + p.style +
+    '&TileMatrixSet=EPSG:3857&TileMatrix={z}&TileRow={y}&TileCol={x}&format=image/png&TIME=' + getTimeStr(key, currentDate());
+}
+function currentDate(){ return document.getElementById('dateSelect').value; }
+function isOffline(){ const c = document.getElementById('offlineChk'); return !!(c && c.checked); }
+function refreshLayer(){
+  if (isOffline()){ return refreshOffline(); }
+  const key = document.getElementById('productSelect').value, p = PRODUCTS[key];
+  if (chlLayer){ map.removeLayer(chlLayer); chlLayer = null; }
+  if (p.type === 'wms'){
+    chlLayer = L.tileLayer.wms(p.wmsUrl, { layers:p.wmsLayer, format:'image/png', transparent:true, pane:'chlPane',
+      TIME:getTimeStr(key, currentDate()), opacity:curOpacity(), attribution:'NASA EOSDIS GIBS / PACE OCI' });
+  } else {
+    chlLayer = L.tileLayer(buildWmtsTemplate(key), { opacity:curOpacity(), maxZoom:12, pane:'chlPane', attribution:'Copernicus Marine Service' });
+  }
+  chlLayer.addTo(map);
+  if (sstLayer){ map.removeLayer(sstLayer); sstLayer = null; }
+  if (document.getElementById('sstChk').checked){
+    sstLayer = L.tileLayer(buildWmtsTemplate('SST_L4'), { opacity:Math.min(curOpacity(),0.6), maxZoom:12, pane:'chlPane', attribution:'Copernicus Marine - SST' });
+    sstLayer.addTo(map);
+  }
+  document.getElementById('prodDesc').textContent = p.desc;
+  document.getElementById('shownDate').textContent = getTimeStr(key, currentDate()) + (p.cadence==='monthly'?' (media mensile)':'')
+    + (currentDate()===ymd(todayUTC) ? ' - OGGI spesso non ancora pronto (latenza): usa Ieri' : '');
+}
+document.getElementById('opacity').addEventListener('input', () => {
+  if (chlLayer) chlLayer.setOpacity(curOpacity());
+  if (sstLayer) sstLayer.setOpacity(Math.min(curOpacity(),0.6));
+});
+// Luminosita mappa base (satellite + batimetria nel tilePane) - non tocca clorofilla (chlPane)
+document.getElementById('brightness').addEventListener('input', e => {
+  const p = map.getPane('tilePane'); if (p) p.style.filter = 'brightness(' + (e.target.value/100) + ')';
+});
+document.getElementById('sstChk').addEventListener('change', refreshLayer);
+
+// === SELETTORE PRODOTTI (solo CHL nel menu; SST e' un overlay) ===
+const sel = document.getElementById('productSelect');
+Object.keys(PRODUCTS).filter(k => PRODUCTS[k].kind === 'chl').forEach(k => {
+  const o = document.createElement('option'); o.value = k; o.textContent = PRODUCTS[k].name; sel.appendChild(o);
+});
+sel.value = 'MED_L4';   // default: Med L4 gap-free (no buchi nuvole, come GaraForio); PACE resta selezionabile
+sel.addEventListener('change', refreshLayer);
+
+// === DATE ===
+function ymd(d){ return d.toISOString().slice(0,10); }
+const dateInput = document.getElementById('dateSelect'), qWrap = document.getElementById('quickDates');
+const today = new Date();
+const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+dateInput.max = ymd(todayUTC);
+function setActiveQuick(btn){ qWrap.querySelectorAll('button').forEach(x => x.classList.remove('active')); if (btn) btn.classList.add('active'); }
+function applyDate(s){ dateInput.value = s; refreshLayer(); }
+dateInput.addEventListener('change', () => { setActiveQuick(null); applyDate(dateInput.value); });
+[ ['Oggi',0], ['Ieri',1], ['-2g',2], ['-3g',3], ['-7g',7] ].forEach(([lbl,off]) => {
+  const b = document.createElement('button'); b.textContent = lbl;
+  b.addEventListener('click', () => { const d = new Date(todayUTC); d.setUTCDate(d.getUTCDate()-off); setActiveQuick(b); applyDate(ymd(d)); });
+  qWrap.appendChild(b);
+});
+const yest = new Date(todayUTC); yest.setUTCDate(yest.getUTCDate()-1);
+applyDate(ymd(yest)); setActiveQuick(qWrap.querySelector('button:nth-child(2)'));
+
+// === CAMPIONAMENTO PUNTUALE (GetFeatureInfo) ===
+async function sampleValue(p, key, lat, lon, zf){
+  const z = (zf != null) ? zf : Math.min(map.getZoom(), 12), pt = map.project([lat, lon], z);
+  const col = Math.floor(pt.x/256), row = Math.floor(pt.y/256), i = Math.floor(pt.x%256), j = Math.floor(pt.y%256);
+  const url = WMTS_BASE + '?service=WMTS&version=1.0.0&request=GetFeatureInfo' +
+    '&layer=' + p.product + '/' + p.dataset + '/' + p.variable + '&style=' + p.style +
+    '&TileMatrixSet=EPSG:3857&TileMatrix=' + z + '&TileRow=' + row + '&TileCol=' + col +
+    '&I=' + i + '&J=' + j + '&infoformat=text/xml&TIME=' + getTimeStr(key, currentDate());
+  try { const r = await fetch(url); const t = await r.text();
+    const m = t.match(/uom="([^"]*)"\s*>([\-0-9.eE]+)</); return m ? { raw:parseFloat(m[2]), uom:m[1] } : null;
+  } catch (err){ return { error:err.message }; }
+}
+function sstToC(s){ if (!s || s.error || s.raw == null) return null; return (/kelvin/i.test(s.uom) || s.raw > 100) ? s.raw - 273.15 : s.raw; }
+
+const samples = [];
+map.on('click', async (e) => {
+  if (rulerActive){ addRulerPoint(e.latlng); return; }   // modalita righello: il click misura
+  if (isOffline()){ L.popup({maxWidth:240}).setLatLng(e.latlng)
+    .setContent('<b>Modalita barca</b><br><small>Il valore puntuale richiede la rete. Disattiva l\'offline per leggerlo.</small>').openOn(map); return; }
+  const key = sel.value, p = PRODUCTS[key], lat = e.latlng.lat, lon = e.latlng.lng;
+  const ll = lat.toFixed(3) + ', ' + lon.toFixed(3);
+  if (!p.point){ L.popup({maxWidth:260}).setLatLng(e.latlng).setContent('<b>Lettura non disponibile</b><br><small>NASA PACE non da il valore puntuale. Passa a un prodotto Mediterraneo.</small>').openOn(map); return; }
+  const popup = L.popup({maxWidth:280}).setLatLng(e.latlng).setContent('<b>Lettura dato...</b>').openOn(map);
+  const date = getTimeStr(key, currentDate()), chl = await sampleValue(p, key, lat, lon);
+  if (!chl || chl.error){ popup.setContent('<b>' + (chl&&chl.error?'Errore lettura':'Nessun dato') + '</b><br>(' + ll + ')<br><small>' +
+    (chl&&chl.error ? esc(chl.error)+' (possibile blocco CORS in file://; servire via http.server)' : 'Nuvole o fuori copertura. Prova un altro giorno o L4 gapfree.') + '</small>'); return; }
+  let html = '<b style="color:#27c46b;font-size:15px;">Clorofilla: ' + chl.raw.toPrecision(3) + ' ' + esc(chl.uom) + '</b>';
+  let sstC = null;
+  if (document.getElementById('sstChk').checked){ sstC = sstToC(await sampleValue(PRODUCTS.SST_L4, 'SST_L4', lat, lon));
+    if (sstC != null) html += '<br><b style="color:#ff9f4a;font-size:14px;">SST: ' + sstC.toFixed(2) + ' &deg;C</b>'; }
+  html += '<br><small>Punto: ' + ll + '<br>Data: ' + date + '</small>';
+  popup.setContent(html);
+  samples.push({ date, product:key, lat:lat.toFixed(5), lon:lon.toFixed(5), chl:chl.raw, uom:chl.uom, sst_c:sstC!=null?sstC.toFixed(2):'' });
+});
+
+// === GEOLOCALIZZAZIONE ===
+document.getElementById('geoBtn').addEventListener('click', () => {
+  if (!navigator.geolocation){ alert('Geolocalizzazione non disponibile.'); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => { const { latitude:lat, longitude:lon } = pos.coords; map.setView([lat,lon],10);
+      L.circleMarker([lat,lon], { radius:8, color:'#27c46b', weight:3, fillColor:'#27c46b', fillOpacity:0.5 }).addTo(map).bindPopup('Sei qui').openPopup(); },
+    () => alert('Impossibile ottenere la posizione.'), { enableHighAccuracy:true, timeout:8000 });
+});
+
+// === DOWNLOAD helper ===
+function download(filename, text, mime){
+  const blob = new Blob([text], { type:mime }), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(a.href);
+}
+document.getElementById('expCsv').addEventListener('click', () => {
+  if (!samples.length){ alert('Nessun punto campionato. Clicca prima sul mare.'); return; }
+  const head = 'data,prodotto,lat,lon,clorofilla,uom,sst_C\n';
+  const rows = samples.map(s => [s.date,s.product,s.lat,s.lon,s.chl,s.uom,s.sst_c].join(',')).join('\n');
+  download('ischiafishing_punti_' + currentDate() + '.csv', head + rows, 'text/csv');
+});
+
+// === FRONTE (marching squares, adattato da Clorofilla) ===
+const frontLayer = L.layerGroup().addTo(map);
+let frontSegments = [];
+const frontBtn = document.getElementById('frontBtn'), frontInfo = document.getElementById('frontInfo');
+async function pool(items, size, worker){
+  const out = new Array(items.length); let idx = 0;
+  async function run(){ while (idx < items.length){ const k = idx++; out[k] = await worker(items[k], k); } }
+  await Promise.all(Array.from({length:Math.min(size, items.length)}, run)); return out;
+}
+function marchingSquares(val, lats, lons, thr){
+  const segs = [], ix = (a,b) => (thr-a)/(b-a);
+  for (let i=0;i<lats.length-1;i++) for (let j=0;j<lons.length-1;j++){
+    const TL=val[i][j], TR=val[i][j+1], BR=val[i+1][j+1], BL=val[i+1][j];
+    if ([TL,TR,BR,BL].some(v => v==null||isNaN(v))) continue;
+    const c = (TL>=thr?8:0)|(TR>=thr?4:0)|(BR>=thr?2:0)|(BL>=thr?1:0);
+    if (c===0||c===15) continue;
+    const T=()=>[lats[i],lons[j]+(lons[j+1]-lons[j])*ix(TL,TR)], B=()=>[lats[i+1],lons[j]+(lons[j+1]-lons[j])*ix(BL,BR)];
+    const L2=()=>[lats[i]+(lats[i+1]-lats[i])*ix(TL,BL),lons[j]], R=()=>[lats[i]+(lats[i+1]-lats[i])*ix(TR,BR),lons[j+1]];
+    const E={T,B,L:L2,R};
+    const TBL={1:['L','B'],2:['B','R'],3:['L','R'],4:['T','R'],6:['T','B'],7:['L','T'],8:['T','L'],9:['T','B'],11:['T','R'],12:['R','L'],13:['R','B'],14:['B','L'],5:['L','T','B','R'],10:['T','R','L','B']}[c];
+    for (let k=0;k<TBL.length;k+=2) segs.push([ E[TBL[k]](), E[TBL[k+1]]() ]);
+  }
+  return segs;
+}
+async function computeFront(){
+  if (isOffline()){ frontInfo.textContent = 'Il fronte campiona i valori via rete: non disponibile in modalita barca.'; return; }
+  const key = sel.value, p = PRODUCTS[key];
+  if (!p.point){ frontInfo.textContent = 'Il fronte richiede un prodotto Mediterraneo.'; return; }
+  const b = map.getBounds(), N = 14, lats = [], lons = [];
+  for (let i=0;i<N;i++) lats.push(b.getNorth()-(b.getNorth()-b.getSouth())*i/(N-1));
+  for (let j=0;j<N;j++) lons.push(b.getWest()+(b.getEast()-b.getWest())*j/(N-1));
+  frontBtn.disabled = true; const cells = [];
+  for (let i=0;i<N;i++) for (let j=0;j<N;j++) cells.push([i,j]);
+  let done = 0;
+  const flat = await pool(cells, 8, async ([i,j]) => { const r = await sampleValue(p, key, lats[i], lons[j]);
+    frontInfo.textContent = 'Campionamento fronte... ' + (++done) + '/' + cells.length; return (r&&!r.error&&r.raw!=null)?r.raw:NaN; });
+  frontBtn.disabled = false;
+  const val = Array.from({length:N}, (_,i) => flat.slice(i*N, i*N+N));
+  const valid = flat.filter(v => !isNaN(v)).sort((a,b)=>a-b);
+  if (valid.length < 12){ frontInfo.textContent = 'Dati insufficienti (nuvole/terra) in questa vista.'; return; }
+  const thr = valid[Math.floor(valid.length/2)];
+  frontSegments = marchingSquares(val, lats, lons, thr);
+  frontLayer.clearLayers();
+  frontSegments.forEach(s => L.polyline(s, { color:'#ff2bd6', weight:3, opacity:0.95 }).addTo(frontLayer));
+  frontInfo.textContent = 'Fronte: ' + frontSegments.length + ' segmenti, soglia ' + thr.toPrecision(3) + ' mg/m3. Traina sul lato BLU (valori bassi).';
+}
+frontBtn.addEventListener('click', computeFront);
+document.getElementById('expKml').addEventListener('click', () => {
+  if (!frontSegments.length){ alert('Nessun fronte calcolato. Premi prima "Calcola fronte".'); return; }
+  const pm = frontSegments.map(s => '<Placemark><styleUrl>#f</styleUrl><LineString><coordinates>' +
+    s.map(pt => pt[1].toFixed(5)+','+pt[0].toFixed(5)+',0').join(' ') + '</coordinates></LineString></Placemark>').join('\n');
+  const kml = '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document>' +
+    '<name>Fronte clorofilla ' + currentDate() + '</name><Style id="f"><LineStyle><color>ffd62bff</color><width>3</width></LineStyle></Style>\n' + pm + '\n</Document></kml>';
+  download('fronte_ischiafishing_' + currentDate() + '.kml', kml, 'application/vnd.google-earth.kml+xml');
+});
+
+// === VISTA 2: MOVIMENTO FRONTE (deriva gara, da front_drift.js) ===
+const frontMoveLayer = L.layerGroup();
+let fmTimer = null;
+const FD = window.FRONT_DRIFT || { segs: [], cumPath: [] };
+const PLAN = window.GARA_PLAN || { routes: {}, spots: [], manche: [] };
+let curManche = 0, curRoute = 'A';
+function ROUTE(){ return (PLAN.routes[curRoute] || { wp:[] }).wp; }
+function tmin(t){ const p = t.split(':'); return (+p[0]-8)*60 + (+p[1]); }
+function kmToLatLng(lat, lon, e, n){ return [ lat + n/110.574, lon + e/(111.320*Math.cos(lat*Math.PI/180)) ]; }
+function fmColor(idx){ const f = idx/16;
+  return 'rgb(' + Math.round(60+f*180) + ',' + Math.round(180-f*80) + ',' + Math.round(220-f*180) + ')'; }
+function hvNm(a, b){ const R = 3440.065, d2r = Math.PI/180;
+  const dLat = (b[0]-a[0])*d2r, dLon = (b[1]-a[1])*d2r;
+  const s = Math.sin(dLat/2)**2 + Math.cos(a[0]*d2r)*Math.cos(b[0]*d2r)*Math.sin(dLon/2)**2;
+  return R*2*Math.asin(Math.sqrt(s)); }
+function routePos(min){ const w = ROUTE(); if (!w.length) return null;
+  if (min <= w[0].m) return [w[0].lat, w[0].lon];
+  if (min >= w[w.length-1].m) return [w[w.length-1].lat, w[w.length-1].lon];
+  for (let i=0;i<w.length-1;i++){ const a=w[i], b=w[i+1];
+    if (a.m <= min && min <= b.m){ const f = (min-a.m)/(b.m-a.m); return [a.lat+(b.lat-a.lat)*f, a.lon+(b.lon-a.lon)*f]; } }
+  return [w[w.length-1].lat, w[w.length-1].lon]; }
+function wpAt(min){ const ww = ROUTE(); let cur = ww[0]; for (const w of ww){ if (w.m <= min) cur = w; } return cur; }
+function inSolunare(t){ const M = PLAN.manche[curManche]; if (!M || !M.solunare) return false;
+  const p = M.solunare.split('-'); return tmin(t) >= tmin(p[0]) && tmin(t) <= tmin(p[1]); }
+function drawFrontAt(idx){
+  frontMoveLayer.clearLayers();
+  const cp = FD.cumPath[idx] || { e:0, n:0, t:'08:00' };
+  const min = tmin(cp.t);
+  // (campo profondo: strutture FISSE, nessun fronte mobile - vedi rotta sotto)
+  // SPOT consigliati (stelle gialle persistenti, strutture reali)
+  PLAN.spots.forEach(sp => L.circleMarker([sp.lat, sp.lon], { radius:9, color:'#ffd700', weight:3, fillColor:'#ffd700', fillOpacity:0.35 })
+    .bindPopup('<b style="color:#caa000">'+esc(sp.nome)+'</b>').addTo(frontMoveLayer));
+  // percorso di traina cresciuto fino all'ora corrente + barca + miglia
+  let nm = 0; const w = ROUTE();
+  if (w.length){
+    const track = []; for (let t=0;t<=min;t+=10){ const p = routePos(t); if (p) track.push(p); }
+    const here = routePos(min); if (here) track.push(here);
+    for (let i=1;i<track.length;i++) nm += hvNm(track[i-1], track[i]);
+    L.polyline(w.map(x=>[x.lat,x.lon]), { color:'#00ff88', weight:3.5, opacity:0.75, dashArray:'8 5' }).addTo(frontMoveLayer);
+    w.forEach((x,i) => L.circleMarker([x.lat,x.lon], { radius:4, color:'#00ff88', weight:2, fillColor:'#06210f', fillOpacity:1 })
+      .bindTooltip(String(i+1), { permanent:true, direction:'center', className:'seg-label' }).addTo(frontMoveLayer));
+    if (track.length > 1) L.polyline(track, { color:'#00ff88', weight:4, opacity:0.95 }).addTo(frontMoveLayer);
+    if (here){ const sol = inSolunare(cp.t);
+      L.circleMarker(here, { radius:8, color: sol?'#ffd700':'#ffffff', weight:3, fillColor: sol?'#ffd700':'#00c850', fillOpacity:0.95 })
+        .bindPopup('<b>Barca - ' + cp.t + '</b><br>percorso ~' + nm.toFixed(1) + ' nm').addTo(frontMoveLayer); }
+  }
+  const wp = wpAt(min) || {};
+  const solTxt = inSolunare(cp.t) ? ' [SOLUNARE]' : '';
+  const spotTxt = wp.spot ? '  >>> SPOT ORA' : '';
+  document.getElementById('fmTime').textContent = cp.t + solTxt + '  (' + nm.toFixed(1) + ' nm)';
+  document.getElementById('fmTip').textContent = cp.t + ' - ' + (wp.nota || '') + spotTxt;
+}
+const fmSlider = document.getElementById('fmSlider'); fmSlider.min = 0; fmSlider.max = 16; fmSlider.step = 1; fmSlider.value = 6;
+const fmPlay = document.getElementById('fmPlay');
+function fmStop(){ if (fmTimer){ clearInterval(fmTimer); fmTimer = null; } fmPlay.innerHTML = '&#9654;'; }
+function fmStart(){ fmPlay.innerHTML = '&#10073;&#10073;';
+  fmTimer = setInterval(() => { let v = +fmSlider.value; v = (v >= 16) ? 0 : v + 1; fmSlider.value = v; drawFrontAt(v); }, 900); }
+fmPlay.addEventListener('click', () => { fmTimer ? fmStop() : fmStart(); });
+fmSlider.addEventListener('input', () => { fmStop(); drawFrontAt(+fmSlider.value); });
+document.getElementById('frontMoveChk').addEventListener('change', e => {
+  if (e.target.checked){
+    if (!ROUTE().length){ document.getElementById('fmTip').textContent = 'Rotta non caricata (gara_plan.js).'; return; }
+    frontMoveLayer.addTo(map); drawFrontAt(+fmSlider.value);
+    if (campoBounds) map.fitBounds(campoBounds, { padding:[30,30] });
+  } else { fmStop(); map.removeLayer(frontMoveLayer); }
+});
+const routeSel = document.getElementById('routeSel');
+Object.keys(PLAN.routes || {}).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = PLAN.routes[k].nome; routeSel.appendChild(o); });
+routeSel.addEventListener('change', e => { curRoute = e.target.value; if (map.hasLayer(frontMoveLayer)) drawFrontAt(+fmSlider.value); });
+const mancheSel = document.getElementById('mancheSel');
+PLAN.manche.forEach((M, i) => { const o = document.createElement('option'); o.value = i; o.textContent = 'Manche ' + M.id + ' - ' + M.giorno; mancheSel.appendChild(o); });
+function updateMancheInfo(){ const M = PLAN.manche[curManche];
+  document.getElementById('mancheInfo').textContent = M ? ('Solunare ' + M.solunare + ' (verificato ephem) | alta ' + M.alta + ' / bassa ' + M.bassa + ' (marea ~20cm) - riflusso domina') : ''; }
+mancheSel.addEventListener('change', e => { curManche = +e.target.value; updateMancheInfo(); if (map.hasLayer(frontMoveLayer)) drawFrontAt(+fmSlider.value); });
+updateMancheInfo();
+
+// === AUTO-RICAMPIONA CHL: trova la zona piu' produttiva e marca il PRIME ===
+const primeLayer = L.layerGroup();
+async function updateCHLPrime(){
+  const note = document.getElementById('chlNote');
+  if (!campoBounds){ note.textContent = 'Campo non caricato.'; return; }
+  const btn = document.getElementById('chlUpdateBtn'); btn.disabled = true;
+  const N = 9, b = campoBounds, lats = [], lons = [];
+  for (let i=0;i<N;i++) lats.push(b.getNorth() - (b.getNorth()-b.getSouth())*i/(N-1));
+  for (let j=0;j<N;j++) lons.push(b.getWest() + (b.getEast()-b.getWest())*j/(N-1));
+  const cells = []; for (let i=0;i<N;i++) for (let j=0;j<N;j++) cells.push([lats[i], lons[j]]);
+  let done = 0;
+  const res = await pool(cells, 8, async ([la, lo]) => {
+    const r = await sampleValue(PRODUCTS.MED_L4, 'MED_L4', la, lo, 11);
+    note.textContent = 'Campionamento CHL... ' + (++done) + '/' + cells.length;
+    return (r && !r.error && r.raw != null) ? { v:r.raw, la, lo } : null;
+  });
+  btn.disabled = false;
+  const got = res.filter(Boolean);
+  if (got.length < 8){ note.textContent = 'Dati CHL insufficienti per ' + currentDate() + ' (prova Ieri).'; return; }
+  const vs = got.map(g => g.v).sort((a,b)=>a-b);
+  const mn = vs[0], mx = vs[vs.length-1], med = vs[Math.floor(vs.length/2)];
+  const top = got.reduce((a,c) => c.v > a.v ? c : a);
+  primeLayer.clearLayers();
+  L.circleMarker([top.la, top.lo], { radius:11, color:'#ff2bd6', weight:3, fillColor:'#ff2bd6', fillOpacity:0.45 })
+    .bindPopup('<b style="color:#ff7be0">PRIME oggi (CHL max)</b><br>CHL ' + top.v.toPrecision(2) + ' mg/m3<br>Porta qui lo spread nel solunare.')
+    .bindTooltip('PRIME', { permanent:true, direction:'top', className:'hotspot-label' }).addTo(primeLayer);
+  primeLayer.addTo(map);
+  note.textContent = 'CHL ' + mn.toPrecision(2) + '-' + mx.toPrecision(2) + ' (mediana ' + med.toPrecision(2) + ') mg/m3. PRIME @ '
+    + top.la.toFixed(3) + ',' + top.lo.toFixed(3) + ' -> lavoralo nel solunare. (' + currentDate() + ')';
+}
+document.getElementById('chlUpdateBtn').addEventListener('click', updateCHLPrime);
+
+// === VISTA 3: PREVISIONE GARA (vento reale Open-Meteo) ===
+function cardinal(deg){ const d = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  return d[Math.round((((deg%360)+360)%360)/22.5) % 16]; }
+function windColor(s){ return s<5 ? '#8fe39a' : (s<12 ? '#e0c84a' : (s<20 ? '#ff9f4a' : '#ff5b5b')); }
+function renderForecast(data, M){
+  const h = data.hourly, out = document.getElementById('fcOut');
+  const sp2 = (M.solunare||'').split('-'), solA = sp2[0]?tmin(sp2[0]):-1, solB = sp2[1]?tmin(sp2[1]):-1;
+  const bassaH = M.bassa ? +M.bassa.slice(0,2) : -1;
+  let rows = '', vmax = 0, vmaxt = '', dirAft = [];
+  for (let i=0;i<h.time.length;i++){ const hh = +h.time[i].slice(11,13); if (hh<8||hh>15) continue;
+    const sp = h.wind_speed_10m[i], dg = h.wind_direction_10m[i], min = (hh-8)*60, inSol = min>=solA && min<=solB;
+    if (sp>vmax){ vmax=sp; vmaxt=h.time[i].slice(11,16); }
+    if (hh>=13) dirAft.push(dg);
+    const fl = []; if (inSol) fl.push('solunare'); if (hh===bassaH) fl.push('bassa');
+    rows += '<div class="wrow'+(inSol?' sol':'')+'"><span class="wt">'+h.time[i].slice(11,16)+'</span>'+
+      '<span class="warr" style="transform:rotate('+(dg+180)+'deg)">&#8593;</span>'+
+      '<span class="wsp" style="color:'+windColor(sp)+'">'+sp.toFixed(0)+' km/h da '+cardinal(dg)+'</span>'+
+      '<span class="wfl">'+fl.join(' ')+'</span></div>';
+  }
+  const aft = dirAft.length ? cardinal(dirAft.reduce((a,b)=>a+b,0)/dirAft.length) : '-';
+  out.innerHTML = '<div class="wsum">Vento max ~'+vmax.toFixed(0)+' km/h alle '+vmaxt+', pomeriggio da '+aft+
+    '. Coerente col briefing: brezza SW-W -> il fronte deriva E/ESE. Finestra d\'oro: solunare '+(M.solunare||'')+' in riflusso.</div>' + rows;
+}
+async function loadForecast(){
+  const M = PLAN.manche[curManche]; if (!M) return;
+  const out = document.getElementById('fcOut'), note = document.getElementById('fcNote');
+  note.textContent = 'Vento previsto per ' + M.giorno + ' (Open-Meteo, stima - si aggiorna ogni giorno).';
+  out.innerHTML = '<div class="desc">Carico previsione...</div>';
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=41.73&longitude=12.29' +
+    '&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&start_date='+M.date+'&end_date='+M.date+
+    '&timezone=Europe%2FRome&wind_speed_unit=kmh';
+  let data = null;
+  try { const r = await fetch(url); data = await r.json(); localStorage.setItem('fc_'+M.date, JSON.stringify(data)); }
+  catch(e){ const c = localStorage.getItem('fc_'+M.date); if (c){ data = JSON.parse(c); note.textContent += ' [offline: ultima copia salvata]'; } }
+  if (!data || !data.hourly){ out.innerHTML = '<div class="desc">Previsione non disponibile (offline e nessuna copia salvata).</div>'; return; }
+  renderForecast(data, M);
+}
+document.getElementById('fcLoad').addEventListener('click', loadForecast);
+
+// === MODALITA BARCA (OFFLINE) ===
+let SNAPSHOTS = [];
+let BASEMAP = null, localBase = null;
+function snapForDate(d){ return SNAPSHOTS.find(s => s.date === d) || null; }
+async function loadBasemap(){
+  try { const r = await fetch('basemap/index.json', { cache:'no-store' }); BASEMAP = await r.json(); }
+  catch(e){ BASEMAP = null; }
+}
+function applyBaseForMode(){
+  if (isOffline() && BASEMAP){
+    Object.values(baseLayers).forEach(l => { if (map.hasLayer(l)) map.removeLayer(l); });
+    if (!localBase) localBase = L.tileLayer('basemap/' + BASEMAP.provider + '/{z}/{x}/{y}.png',
+      { minZoom: BASEMAP.zmin, maxZoom: BASEMAP.zmax, zIndex: 1, attribution: 'Esri World Imagery (cache offline)' });
+    if (!map.hasLayer(localBase)) localBase.addTo(map);
+  } else {
+    if (localBase && map.hasLayer(localBase)) map.removeLayer(localBase);
+    if (!map.hasLayer(baseLayers['Scuro (CartoDB)'])) baseLayers['Scuro (CartoDB)'].addTo(map);
+  }
+}
+async function loadSnapshots(){
+  try { const r = await fetch('snapshot/index.json', { cache:'no-store' }); const j = await r.json(); SNAPSHOTS = j.snapshots || []; }
+  catch(e){ SNAPSHOTS = []; }
+  updateOfflineInfo();
+}
+function updateOfflineInfo(){
+  const el = document.getElementById('offlineInfo');
+  if (!SNAPSHOTS.length){ el.textContent = 'Nessuno snapshot locale. Online: dati live. Premi "Prepara offline" su una data.'; return; }
+  el.textContent = 'Snapshot locali: ' + SNAPSHOTS.map(s => s.date).join(', ');
+}
+function refreshOffline(){
+  const date = currentDate(), snap = snapForDate(date);
+  if (chlLayer){ map.removeLayer(chlLayer); chlLayer = null; }
+  if (sstLayer){ map.removeLayer(sstLayer); sstLayer = null; }
+  const prodDesc = document.getElementById('prodDesc'), shown = document.getElementById('shownDate');
+  if (snap){
+    chlLayer = L.tileLayer('snapshot/' + date + '/MED_L4/{z}/{x}/{y}.png',
+      { opacity:curOpacity(), minZoom:snap.zmin, maxZoom:snap.zmax, pane:'chlPane', attribution:'Snapshot locale - Copernicus Marine' });
+    chlLayer.addTo(map); chlLayer.setZIndex(10);
+    prodDesc.textContent = 'OFFLINE: snapshot locale MED_L4 (' + snap.tiles_total + ' tile, z' + snap.zmin + '-' + snap.zmax + ').';
+    shown.textContent = date + ' (offline)';
+  } else {
+    prodDesc.textContent = 'OFFLINE: nessuno snapshot per ' + date + '. Scegli una data con snapshot o premi "Prepara offline" mentre sei online.';
+    shown.textContent = date + ' (no snapshot)';
+  }
+}
+document.getElementById('offlineChk').addEventListener('change', e => {
+  if (e.target.checked){
+    if (!snapForDate(currentDate()) && SNAPSHOTS.length){ dateInput.value = SNAPSHOTS[SNAPSHOTS.length-1].date; }
+    sel.value = 'MED_L4'; sel.disabled = true;
+  } else { sel.disabled = false; }
+  applyBaseForMode();
+  refreshLayer();
+});
+document.getElementById('prepOfflineBtn').addEventListener('click', async () => {
+  const date = currentDate(), info = document.getElementById('offlineInfo');
+  try {
+    const r = await fetch('snapshot/' + date + '/tiles.json', { cache:'no-store' });
+    if (!r.ok) throw new Error('nessuno snapshot per ' + date);
+    const tiles = await r.json(); let n = 0;
+    for (const t of tiles){ try { await fetch('snapshot/' + date + '/' + t); } catch(_){} info.textContent = 'Cache dati... ' + (++n) + '/' + tiles.length; }
+    let bn = 0, bt = [];
+    try { const br = await fetch('basemap/tiles.json', { cache:'no-store' }); if (br.ok){ bt = await br.json();
+      for (const t of bt){ try { await fetch('basemap/' + t); } catch(_){} info.textContent = 'Cache mappa base... ' + (++bn) + '/' + bt.length; } } } catch(_){}
+    await loadSnapshots();
+    info.textContent = 'Offline pronto per ' + date + ': ' + n + ' tile dati + ' + bn + ' tile base in cache.';
+  } catch(e){ info.textContent = 'Prepara offline non riuscito: ' + e.message; }
+});
+
+// === COORDINATE CURSORE (fadenkreuz, formato nautico N/E gradi-minuti) ===
+function fmtDM(v, isLat){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
+  const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(3) + "'"; }
+const coordbox = document.getElementById('coordbox');
+function showCoords(ll){ coordbox.textContent = fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
+map.on('mousemove', e => showCoords(e.latlng));
+map.on('click', e => showCoords(e.latlng));
+
+// === RIGHELLO: misura distanze / percorsi spezzati (nm) ===
+let rulerActive = false;
+const rulerPts = [];
+const rulerLayer = L.layerGroup().addTo(map);
+function bearing(a, b){ const d = Math.PI/180;
+  const y = Math.sin((b[1]-a[1])*d) * Math.cos(b[0]*d);
+  const x = Math.cos(a[0]*d)*Math.sin(b[0]*d) - Math.sin(a[0]*d)*Math.cos(b[0]*d)*Math.cos((b[1]-a[1])*d);
+  return (Math.atan2(y, x)*180/Math.PI + 360) % 360; }
+function redrawRuler(){
+  rulerLayer.clearLayers();
+  const note = document.getElementById('rulerNote');
+  const lls = rulerPts.map(p => [p.lat, p.lng]);
+  lls.forEach(ll => L.circleMarker(ll, { radius:4, color:'#ffd24a', weight:2, fillColor:'#0d1626', fillOpacity:1 }).addTo(rulerLayer));
+  if (lls.length > 1) L.polyline(lls, { color:'#ffd24a', weight:3, opacity:0.9, dashArray:'6 4' }).addTo(rulerLayer);
+  let total = 0;
+  for (let i=1;i<lls.length;i++){ const seg = hvNm(lls[i-1], lls[i]); total += seg;
+    const mid = [ (lls[i-1][0]+lls[i][0])/2, (lls[i-1][1]+lls[i][1])/2 ];
+    L.marker(mid, { icon:L.divIcon({ className:'', html:'<span class="seg-label">'+seg.toFixed(2)+' nm &middot; '+Math.round(bearing(lls[i-1],lls[i]))+'&deg;</span>', iconSize:[88,14], iconAnchor:[44,7] }), interactive:false }).addTo(rulerLayer);
+  }
+  if (lls.length > 1){ const last = lls[lls.length-1];
+    L.marker(last, { icon:L.divIcon({ className:'', html:'<span class="seg-label" style="font-weight:700">TOT '+total.toFixed(2)+' nm</span>', iconSize:[84,14], iconAnchor:[-8,7] }), interactive:false }).addTo(rulerLayer); }
+  note.textContent = lls.length < 2 ? 'Clicca i punti sul mare per misurare (nm).'
+    : ('Tratti: ' + (lls.length-1) + ' | Totale ' + total.toFixed(2) + ' nm (' + (total*1.852).toFixed(1) + ' km). Doppio-click/Pulisci per azzerare.');
+}
+function addRulerPoint(ll){ rulerPts.push(ll); redrawRuler(); }
+document.getElementById('rulerChk').addEventListener('change', e => {
+  rulerActive = e.target.checked;
+  document.getElementById('map').classList.toggle('ruler', rulerActive);
+  if (rulerActive) map.doubleClickZoom.disable(); else map.doubleClickZoom.enable();
+});
+document.getElementById('rulerClear').addEventListener('click', () => { rulerPts.length = 0; redrawRuler(); });
+
+// === TOGGLE PANNELLO (mobile) ===
+document.getElementById('toggleBtn').addEventListener('click', () => { document.getElementById('panel').classList.toggle('collapsed'); });
+
+// === SIDEBOARD: sezioni a fisarmonica (ogni modulo si apre/chiude) ===
+document.querySelectorAll('.sec-h').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+
+// Service worker (PWA offline) - best effort
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+
+// Avvio
+loadSnapshots();
+loadBasemap();
+refreshLayer();
+if (campoBounds) map.fitBounds(campoBounds, { padding:[30,30] });
+</script>
+</body>
+</html>
