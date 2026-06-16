@@ -723,21 +723,14 @@ document.getElementById('prepOfflineBtn').addEventListener('click', async () => 
   } catch(e){ info.textContent = 'Prepara offline non riuscito: ' + e.message; }
 });
 
-// === COORDINATE CURSORE (fadenkreuz, formato nautico N/E gradi-minuti) ===
+// === COORDINATE = MIRINO CENTRALE (Fadenkreuz, formato nautico N/E gradi-minuti) ===
 function fmtDM(v, isLat){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
   const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(3) + "'"; }
 const coordbox = document.getElementById('coordbox');
 function showCoords(ll){ coordbox.textContent = fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
-map.on('mousemove', e => showCoords(e.latlng));   // desktop: hover -> coordinate
-map.on('click', e => { showCoords(e.latlng); if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: coordinate (+ punto righello)
+map.on('click', e => { if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: punto righello (se attivo)
 map.doubleClickZoom.disable();   // il doppio-click/tap apre il popup valore, non zooma (pinch/+/- per zoomare)
-// MOBILE: dito appoggiato/trascinato -> coordinate live (passivo, non blocca pan/pinch)
-const _mapEl = map.getContainer();
-function _touchCoords(ev){ if (!ev.touches || !ev.touches.length) return; const t = ev.touches[0];
-  const r = _mapEl.getBoundingClientRect(); showCoords(map.containerPointToLatLng([t.clientX - r.left, t.clientY - r.top])); }
-_mapEl.addEventListener('touchstart', _touchCoords, { passive:true });
-_mapEl.addEventListener('touchmove', _touchCoords, { passive:true });
-// MIRINO CENTRALE: durante il pan le coordinate seguono il centro (sotto il mirino). Init all'avvio.
+// Le coordinate seguono SEMPRE il mirino (centro mappa): si aggiornano spostando la mappa, su desktop e mobile.
 map.on('move', () => showCoords(map.getCenter()));
 showCoords(map.getCenter());
 
