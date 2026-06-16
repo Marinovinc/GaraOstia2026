@@ -71,12 +71,15 @@
   .wsum { font-size:11px; color:#bcd; background:#0e1b30; border-left:3px solid var(--accent); border-radius:6px; padding:7px 9px; margin:6px 0; }
   #legend { position:absolute; bottom:18px; right:10px; z-index:1000; background:rgba(19,33,58,0.95);
     border:1px solid #24375c; border-radius:10px; padding:9px 12px; font-size:11px; box-shadow:0 4px 16px rgba(0,0,0,0.5); }
-  #legend .title { font-size:11px; color:#9fb0c8; margin-bottom:5px; text-transform:uppercase; letter-spacing:.4px; }
+  #legend .title { font-size:11px; color:#9fb0c8; margin-bottom:5px; text-transform:uppercase; letter-spacing:.4px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  #legHide { cursor:pointer; color:#9fb0c8; font-size:15px; line-height:1; padding:0 2px; }
+  #legHide:hover { color:#fff; }
+  #legShow { position:absolute; bottom:18px; right:10px; z-index:1000; display:none; cursor:pointer; background:rgba(19,33,58,0.95); border:1px solid #24375c; color:#9fb0c8; border-radius:8px; padding:5px 9px; font-size:11px; }
   #legbar { width:170px; height:13px; border-radius:3px; border:1px solid #2c416c;
     background:linear-gradient(90deg,#000080,#0040ff,#00c0ff,#00e000,#e0e000,#ff6000,#a00000); }
   #legend .lbls { display:flex; justify-content:space-between; margin-top:3px; color:#bcd; }
   #toggleBtn { position:absolute; top:10px; right:10px; z-index:1001; display:none; }
-  #coordbox { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); z-index:1000;
+  #coordbox { position:absolute; bottom:10px; left:10px; z-index:1000;
     background:rgba(13,22,38,0.85); color:#bfe3ff; border:1px solid #2c416c; border-radius:6px;
     padding:3px 9px; font-size:11px; font-family:Consolas,monospace; pointer-events:none; }
   .seg-label { background:rgba(13,22,38,0.88); border:1px solid #2c416c; color:#ffd24a; font-size:10px; padding:0 4px; border-radius:4px; white-space:nowrap; }
@@ -88,7 +91,7 @@
     #panel { width:calc(100vw - 20px); transform:translateY(0); transition:transform .25s; }
     #panel.collapsed { transform:translateY(-130%); }
     #toggleBtn { display:block; }
-    #legend { bottom:10px; left:10px; right:auto; }
+    #legend { bottom:10px; }
     #legbar { width:130px; }
   }
 </style>
@@ -195,10 +198,11 @@
 </div>
 
 <div id="legend">
-  <div class="title">Clorofilla mg/m&sup3; (scala log)</div>
+  <div class="title"><span>Clorofilla mg/m&sup3; (scala log)</span><span id="legHide" title="Nascondi legenda">&times;</span></div>
   <div id="legbar"></div>
   <div class="lbls"><span>bassa</span><span>media</span><span>alta</span></div>
 </div>
+<button id="legShow" title="Mostra legenda">Legenda</button>
 
 <script src="lib/leaflet.js"></script>
 <script src="campo_gara.js"></script>
@@ -754,6 +758,16 @@ document.getElementById('rulerClear').addEventListener('click', () => { rulerPts
 
 // === TOGGLE PANNELLO (mobile) ===
 document.getElementById('toggleBtn').addEventListener('click', () => { document.getElementById('panel').classList.toggle('collapsed'); });
+
+// === LEGENDA: nascondi / mostra ===
+document.getElementById('legHide').addEventListener('click', () => {
+  document.getElementById('legend').style.display = 'none';
+  document.getElementById('legShow').style.display = 'block';
+});
+document.getElementById('legShow').addEventListener('click', () => {
+  document.getElementById('legend').style.display = 'block';
+  document.getElementById('legShow').style.display = 'none';
+});
 
 // === SIDEBOARD: sezioni a fisarmonica (ogni modulo si apre/chiude) ===
 document.querySelectorAll('.sec-h').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
