@@ -1,6 +1,6 @@
 /* Service worker IschiaFishing - cache app shell per uso offline (modalita barca).
    Strategia: cache-first per gli asset locali; rete per i tile satellitari live. */
-const CACHE = 'ischiafishing-v24';
+const CACHE = 'ischiafishing-v25';
 const SHELL = [
   'index.html', 'campo_gara.js', 'front_drift.js', 'gara_plan.js', 'isobate.js', 'dropoff.js', 'manifest.webmanifest',
   'lib/leaflet.js', 'lib/leaflet.css', 'icon-192.png', 'icon-512.png'

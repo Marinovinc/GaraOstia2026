@@ -82,6 +82,12 @@
   #coordbox { position:absolute; bottom:10px; left:10px; z-index:1000;
     background:rgba(13,22,38,0.85); color:#bfe3ff; border:1px solid #2c416c; border-radius:6px;
     padding:3px 9px; font-size:11px; font-family:Consolas,monospace; pointer-events:none; }
+  /* Mirino centrale (Fadenkreuz) - punto di lettura coordinate al centro mappa */
+  #mapCrosshair { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:600; }
+  #mapCrosshair .ch-h, #mapCrosshair .ch-v { position:absolute; top:50%; left:50%; background:rgba(255,255,255,0.92); box-shadow:0 0 2px rgba(0,0,0,0.95); }
+  #mapCrosshair .ch-h { width:46px; height:1.5px; transform:translate(-50%,-50%); }
+  #mapCrosshair .ch-v { width:1.5px; height:46px; transform:translate(-50%,-50%); }
+  #mapCrosshair .ch-dot { position:absolute; top:50%; left:50%; width:5px; height:5px; background:#ff2bd6; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 0 3px rgba(0,0,0,0.95); }
   .seg-label { background:rgba(13,22,38,0.88); border:1px solid #2c416c; color:#ffd24a; font-size:10px; padding:0 4px; border-radius:4px; white-space:nowrap; }
   #map.ruler { cursor: crosshair; }
   #rulerClear { width:100%; margin-top:6px; cursor:pointer; border:1px solid #2c416c; background:#16284a; color:var(--txt); border-radius:6px; padding:6px 9px; font-size:12px; }
@@ -100,6 +106,7 @@
 <div id="map"></div>
 <button id="toggleBtn">Filtri</button>
 <div id="coordbox">-</div>
+<div id="mapCrosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-dot"></div></div>
 
 <div id="panel">
   <h1>IschiaFishing - Campionato Italiano Traina Altura</h1>
@@ -730,6 +737,9 @@ function _touchCoords(ev){ if (!ev.touches || !ev.touches.length) return; const 
   const r = _mapEl.getBoundingClientRect(); showCoords(map.containerPointToLatLng([t.clientX - r.left, t.clientY - r.top])); }
 _mapEl.addEventListener('touchstart', _touchCoords, { passive:true });
 _mapEl.addEventListener('touchmove', _touchCoords, { passive:true });
+// MIRINO CENTRALE: durante il pan le coordinate seguono il centro (sotto il mirino). Init all'avvio.
+map.on('move', () => showCoords(map.getCenter()));
+showCoords(map.getCenter());
 
 // === RIGHELLO: misura distanze / percorsi spezzati (nm) ===
 let rulerActive = false;
