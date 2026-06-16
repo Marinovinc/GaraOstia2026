@@ -727,7 +727,7 @@ document.getElementById('prepOfflineBtn').addEventListener('click', async () => 
 function fmtDM(v, isLat){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
   const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(3) + "'"; }
 const coordbox = document.getElementById('coordbox');
-function showCoords(ll){ coordbox.textContent = fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
+function showCoords(ll){ coordbox.innerHTML = '<span style="color:#ff2bd6;font-weight:bold;">&#8982;</span> ' + fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
 map.on('click', e => { if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: punto righello (se attivo)
 map.doubleClickZoom.disable();   // il doppio-click/tap apre il popup valore, non zooma (pinch/+/- per zoomare)
 // Le coordinate seguono SEMPRE il mirino (centro mappa): si aggiornano spostando la mappa, su desktop e mobile.
