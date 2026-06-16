@@ -89,7 +89,8 @@
   #mapCrosshair .ch-h, #mapCrosshair .ch-v { position:absolute; top:50%; left:50%; background:rgba(255,255,255,0.92); box-shadow:0 0 2px rgba(0,0,0,0.95); }
   #mapCrosshair .ch-h { width:46px; height:1.5px; transform:translate(-50%,-50%); }
   #mapCrosshair .ch-v { width:1.5px; height:46px; transform:translate(-50%,-50%); }
-  #mapCrosshair .ch-dot { position:absolute; top:50%; left:50%; width:5px; height:5px; background:#ff2bd6; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 0 3px rgba(0,0,0,0.95); }
+  #mapCrosshair .ch-grab { position:absolute; top:50%; left:50%; width:28px; height:28px; transform:translate(-50%,-50%); border-radius:50%; pointer-events:auto; cursor:move; touch-action:none; }
+  #mapCrosshair .ch-grab::after { content:''; position:absolute; top:50%; left:50%; width:6px; height:6px; background:#ff2bd6; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 0 3px rgba(0,0,0,0.95); }
   .seg-label { background:rgba(13,22,38,0.88); border:1px solid #2c416c; color:#ffd24a; font-size:10px; padding:0 4px; border-radius:4px; white-space:nowrap; }
   #map.ruler { cursor: crosshair; }
   #rulerClear { width:100%; margin-top:6px; cursor:pointer; border:1px solid #2c416c; background:#16284a; color:var(--txt); border-radius:6px; padding:6px 9px; font-size:12px; }
@@ -108,7 +109,7 @@
 <div id="map"></div>
 <button id="toggleBtn">Filtri</button>
 <div id="coordbox">-</div>
-<div id="mapCrosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-dot"></div></div>
+<div id="mapCrosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-grab"></div></div>
 
 <div id="panel">
   <h1>IschiaFishing - Campionato Italiano Traina Altura</h1>
@@ -726,15 +727,35 @@ document.getElementById('prepOfflineBtn').addEventListener('click', async () => 
 });
 
 // === COORDINATE = MIRINO CENTRALE (Fadenkreuz, formato nautico N/E gradi-minuti) ===
-function fmtDM(v, isLat){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
-  const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(3) + "'"; }
+function fmtDM(v, isLat, dec){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
+  const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(dec) + "'"; }
 const coordbox = document.getElementById('coordbox');
-function showCoords(ll){ coordbox.innerHTML = '<span style="color:#ff2bd6;font-weight:bold;">&#8982;</span> ' + fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
+// Precisione adattata allo zoom: piu' zoom = piu' decimali di minuto (a zoom basso niente finta precisione).
+function coordDecimals(){ const z = map.getZoom(); return z >= 15 ? 4 : z >= 12 ? 3 : z >= 9 ? 2 : 1; }
+function showCoords(ll){ const dec = coordDecimals();
+  coordbox.innerHTML = '<span style="color:#ff2bd6;font-weight:bold;">&#8982;</span> ' + fmtDM(ll.lat,true,dec) + '   ' + fmtDM(ll.lng,false,dec); }
 map.on('click', e => { if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: punto righello (se attivo)
 map.doubleClickZoom.disable();   // il doppio-click/tap apre il popup valore, non zooma (pinch/+/- per zoomare)
-// Le coordinate seguono SEMPRE il mirino (centro mappa): si aggiornano spostando la mappa, su desktop e mobile.
-map.on('move', () => showCoords(map.getCenter()));
-showCoords(map.getCenter());
+// MIRINO TRASCINABILE: di default e' al centro (sposti la mappa -> coordinate aggiornate);
+// puoi anche trascinarlo dal pallino magenta su un punto qualsiasi, senza muovere la mappa.
+const _mapEl = map.getContainer();
+const _chEl = document.getElementById('mapCrosshair');
+const _grab = _chEl.querySelector('.ch-grab');
+function crosshairLatLng(){ const mr = _mapEl.getBoundingClientRect(), gr = _grab.getBoundingClientRect();
+  return map.containerPointToLatLng([gr.left + gr.width/2 - mr.left, gr.top + gr.height/2 - mr.top]); }
+function updateCrosshairCoords(){ showCoords(crosshairLatLng()); }
+map.on('move zoom', updateCrosshairCoords);
+let _chDrag = false;
+_grab.addEventListener('pointerdown', ev => { _chDrag = true; _grab.setPointerCapture(ev.pointerId);
+  map.dragging.disable(); ev.preventDefault(); ev.stopPropagation(); });
+_grab.addEventListener('pointermove', ev => { if (!_chDrag) return;
+  const mr = _mapEl.getBoundingClientRect();
+  const x = Math.max(0, Math.min(mr.width, ev.clientX - mr.left)), y = Math.max(0, Math.min(mr.height, ev.clientY - mr.top));
+  _chEl.style.left = x + 'px'; _chEl.style.top = y + 'px'; showCoords(map.containerPointToLatLng([x, y])); });
+function _chEnd(ev){ if (_chDrag){ _chDrag = false; map.dragging.enable(); try { _grab.releasePointerCapture(ev.pointerId); } catch(e){} } }
+_grab.addEventListener('pointerup', _chEnd);
+_grab.addEventListener('pointercancel', _chEnd);
+updateCrosshairCoords();
 
 // === RIGHELLO: misura distanze / percorsi spezzati (nm) ===
 let rulerActive = false;
