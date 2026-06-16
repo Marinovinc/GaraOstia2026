@@ -403,8 +403,8 @@ async function sampleValue(p, key, lat, lon, zf){
 function sstToC(s){ if (!s || s.error || s.raw == null) return null; return (/kelvin/i.test(s.uom) || s.raw > 100) ? s.raw - 273.15 : s.raw; }
 
 const samples = [];
-map.on('click', async (e) => {
-  if (rulerActive){ addRulerPoint(e.latlng); return; }   // modalita righello: il click misura
+map.on('dblclick', async (e) => {   // DOPPIO click/tap -> legge il valore di clorofilla
+  if (rulerActive){ return; }   // in modalita righello il doppio-click non legge il valore
   if (isOffline()){ L.popup({maxWidth:240}).setLatLng(e.latlng)
     .setContent('<b>Modalita barca</b><br><small>Il valore puntuale richiede la rete. Disattiva l\'offline per leggerlo.</small>').openOn(map); return; }
   const key = sel.value, p = PRODUCTS[key], lat = e.latlng.lat, lon = e.latlng.lng;
@@ -721,8 +721,15 @@ function fmtDM(v, isLat){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
   const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(3) + "'"; }
 const coordbox = document.getElementById('coordbox');
 function showCoords(ll){ coordbox.textContent = fmtDM(ll.lat,true) + '   ' + fmtDM(ll.lng,false); }
-map.on('mousemove', e => showCoords(e.latlng));
-map.on('click', e => showCoords(e.latlng));
+map.on('mousemove', e => showCoords(e.latlng));   // desktop: hover -> coordinate
+map.on('click', e => { showCoords(e.latlng); if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: coordinate (+ punto righello)
+map.doubleClickZoom.disable();   // il doppio-click/tap apre il popup valore, non zooma (pinch/+/- per zoomare)
+// MOBILE: dito appoggiato/trascinato -> coordinate live (passivo, non blocca pan/pinch)
+const _mapEl = map.getContainer();
+function _touchCoords(ev){ if (!ev.touches || !ev.touches.length) return; const t = ev.touches[0];
+  const r = _mapEl.getBoundingClientRect(); showCoords(map.containerPointToLatLng([t.clientX - r.left, t.clientY - r.top])); }
+_mapEl.addEventListener('touchstart', _touchCoords, { passive:true });
+_mapEl.addEventListener('touchmove', _touchCoords, { passive:true });
 
 // === RIGHELLO: misura distanze / percorsi spezzati (nm) ===
 let rulerActive = false;
@@ -752,7 +759,6 @@ function addRulerPoint(ll){ rulerPts.push(ll); redrawRuler(); }
 document.getElementById('rulerChk').addEventListener('change', e => {
   rulerActive = e.target.checked;
   document.getElementById('map').classList.toggle('ruler', rulerActive);
-  if (rulerActive) map.doubleClickZoom.disable(); else map.doubleClickZoom.enable();
 });
 document.getElementById('rulerClear').addEventListener('click', () => { rulerPts.length = 0; redrawRuler(); });
 
