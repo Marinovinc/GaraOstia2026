@@ -730,8 +730,16 @@ document.getElementById('prepOfflineBtn').addEventListener('click', async () => 
 function fmtDM(v, isLat, dec){ const h = isLat ? (v>=0?'N':'S') : (v>=0?'E':'O');
   const a = Math.abs(v), d = Math.floor(a), m = (a-d)*60; return h + ' ' + d + ' ' + m.toFixed(dec) + "'"; }
 const coordbox = document.getElementById('coordbox');
-// Precisione adattata allo zoom: piu' zoom = piu' decimali di minuto (a zoom basso niente finta precisione).
-function coordDecimals(){ const z = map.getZoom(); return z >= 15 ? 4 : z >= 12 ? 3 : z >= 9 ? 2 : 1; }
+// Precisione continua: derivata dai metri/pixel reali (map.distance su 64px) alla latitudine corrente,
+// cosi' l'ultima cifra vale ~1 pixel a QUALSIASI zoom (1' = 1852 m, ogni decimale /10).
+function coordDecimals(){
+  const c = map.getContainer().getBoundingClientRect();
+  if (!c.width){ return 3; }
+  const y = c.height / 2;
+  const res = map.distance(map.containerPointToLatLng([c.width / 2 - 32, y]), map.containerPointToLatLng([c.width / 2 + 32, y])) / 64;
+  if (!isFinite(res) || res <= 0){ return 3; }
+  return Math.max(1, Math.min(5, Math.ceil(Math.log10(1852 / res))));
+}
 function showCoords(ll){ const dec = coordDecimals();
   coordbox.innerHTML = '<span style="color:#ff2bd6;font-weight:bold;">&#8982;</span> ' + fmtDM(ll.lat,true,dec) + '   ' + fmtDM(ll.lng,false,dec); }
 map.on('click', e => { if (rulerActive) addRulerPoint(e.latlng); });   // singolo click/tap: punto righello (se attivo)
@@ -744,7 +752,7 @@ const _grab = _chEl.querySelector('.ch-grab');
 function crosshairLatLng(){ const mr = _mapEl.getBoundingClientRect(), gr = _grab.getBoundingClientRect();
   return map.containerPointToLatLng([gr.left + gr.width/2 - mr.left, gr.top + gr.height/2 - mr.top]); }
 function updateCrosshairCoords(){ showCoords(crosshairLatLng()); }
-map.on('move zoom', updateCrosshairCoords);
+map.on('move zoom zoomend', updateCrosshairCoords);
 let _chDrag = false;
 _grab.addEventListener('pointerdown', ev => { _chDrag = true; _grab.setPointerCapture(ev.pointerId);
   map.dragging.disable(); ev.preventDefault(); ev.stopPropagation(); });
