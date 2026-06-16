@@ -50,7 +50,15 @@ Tutte mettono lo **spot prime nel solunare in riflusso** (mattino).
 3. Scegli la rotta (A/B/C) e il manche (Ven/Sab). Controlla **Previsione gara** (vento) e le finestre solunare/marea.
 4. In barca: **Modalita barca** (snapshot offline) se non hai rete.
 
-## 8. AFFIDABILITA' (onesta)
+## 8. USO APP IN BARCA — mirino e coordinate [GUIDA]
+- **Coordinate del mirino:** in basso al centro, il box con **⌖** (magenta) mostra le coordinate del **mirino** = centro mappa, in formato nautico **N/E gradi-minuti**.
+- **Leggere un punto:** trascina la mappa (dito o mouse) — il mirino resta fermo al centro e le coordinate si aggiornano. Porta il mirino sul punto e leggi.
+- **Mirino libero:** puoi anche **trascinare il mirino** (dal pallino magenta centrale) su un punto qualsiasi, senza spostare la mappa.
+- **Precisione automatica:** i decimali aumentano con lo **zoom** (piu' zoom = piu' precisione, ~1 pixel). Zoom out = lettura larga, zoom in = lettura fine.
+- **Valore clorofilla:** **doppio-tap** (doppio-click) su un punto -> popup col valore di clorofilla in quel punto.
+- **Pannello comandi:** pulsante in **alto a destra** per aprire/chiudere il pannello (anche su PC) e liberare la mappa.
+
+## 9. AFFIDABILITA' (onesta)
 | Elemento | Livello |
 |---|---|
 | Campo, strutture (DEM), CHL, marea, solunare | **8-9/10** (dati/verificati) |
@@ -58,7 +66,7 @@ Tutte mettono lo **spot prime nel solunare in riflusso** (mattino).
 
 **Il pattern CHL del 26-27 sara' diverso da oggi:** ricampiona la sera prima e ritara il PRIME.
 
-## 9. LA REGOLA CHE VALE PER TUTTE
+## 10. LA REGOLA CHE VALE PER TUTTE
 Appena qualcuno annuncia una mangianza alla radio, si molla il piano e si converge. **Il pesce che mangia batte qualsiasi mappa.**
 
 ---
