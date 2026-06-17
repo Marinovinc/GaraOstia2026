@@ -267,7 +267,7 @@ bathy.addTo(map);
 
 // === LAYER GARA (da campo_gara.js) ===
 const gara = { campo:L.layerGroup(), amp:L.layerGroup(), hot:L.layerGroup(), punti:L.layerGroup(), flotta:L.layerGroup() };
-let campoBounds = null;
+let campoBounds = null, campoRing = null;
 (function buildGara(){
   const fc = window.CAMPO_GARA;
   if (!fc){ console.warn('campo_gara.js non caricato'); return; }
@@ -277,7 +277,7 @@ let campoBounds = null;
     if (p.id === 'campo_gara'){
       const poly = L.polygon(toLatLng(g.coordinates[0]), { color:'#27c46b', weight:2, fill:true, fillOpacity:0.04 })
         .bindPopup('<b>Campo gara 2026</b><br>Quadrilatero (capitolato 62 CI - Ostia)');
-      poly.addTo(gara.campo); campoBounds = poly.getBounds();
+      poly.addTo(gara.campo); campoBounds = poly.getBounds(); campoRing = toLatLng(g.coordinates[0]);
     } else if (p.id === 'amp_tor_paterno'){
       L.polygon(toLatLng(g.coordinates[0]), { color:'var(--divieto)', weight:2, fillColor:'#ff3b3b', fillOpacity:0.22, dashArray:'4 3' })
         .bindPopup('<b style="color:#ff6b6b">AMP Secche di Tor Paterno - DIVIETO</b><br>Zona vietata + buffer 500m (approssimato visivamente)').addTo(gara.amp);
@@ -433,13 +433,47 @@ map.on('dblclick', async (e) => {   // DOPPIO click/tap -> legge il valore di cl
   samples.push({ date, product:key, lat:lat.toFixed(5), lon:lon.toFixed(5), chl:chl.raw, uom:chl.uom, sst_c:sstC!=null?sstC.toFixed(2):'' });
 });
 
+// === DENTRO/FUORI CAMPO GARA (point-in-polygon) ===
+function inCampo(lat, lon){
+  const r = campoRing; if (!r) return null;
+  let inside = false;
+  for (let i=0, j=r.length-1; i<r.length; j=i++){
+    const yi=r[i][0], xi=r[i][1], yj=r[j][0], xj=r[j][1];
+    if (((yi>lat)!==(yj>lat)) && (lon < (xj-xi)*(lat-yi)/(yj-yi)+xi)) inside=!inside;
+  }
+  return inside;
+}
 // === GEOLOCALIZZAZIONE ===
+let _geoMarker = null;
 document.getElementById('geoBtn').addEventListener('click', () => {
-  if (!navigator.geolocation){ alert('Geolocalizzazione non disponibile.'); return; }
-  navigator.geolocation.getCurrentPosition(
-    pos => { const { latitude:lat, longitude:lon } = pos.coords; map.setView([lat,lon],10);
-      L.circleMarker([lat,lon], { radius:8, color:'#27c46b', weight:3, fillColor:'#27c46b', fillOpacity:0.5 }).addTo(map).bindPopup('Sei qui').openPopup(); },
-    () => alert('Impossibile ottenere la posizione.'), { enableHighAccuracy:true, timeout:8000 });
+  if (!navigator.geolocation){ alert('Geolocalizzazione non disponibile su questo browser.'); return; }
+  const gb = document.getElementById('geoBtn'); const lbl = gb.textContent;
+  gb.textContent = 'Cerco la posizione...'; gb.disabled = true;
+  const restore = () => { gb.textContent = lbl; gb.disabled = false; };
+  const show = pos => {
+    restore();
+    const { latitude:lat, longitude:lon, accuracy } = pos.coords;
+    const dentro = inCampo(lat, lon);
+    const col = dentro === false ? '#ff4d4d' : '#27c46b';
+    const stato = dentro === null ? '' : ('<b style="color:'+col+'">'+(dentro?'DENTRO il campo gara':'FUORI dal campo gara')+'</b><br>');
+    if (_geoMarker) map.removeLayer(_geoMarker);
+    _geoMarker = L.circleMarker([lat, lon], { radius:9, color:'#fff', weight:3, fillColor:col, fillOpacity:0.9 })
+      .addTo(map).bindPopup(stato+'<small>Sei qui'+(accuracy?' (&plusmn;'+Math.round(accuracy)+' m)':'')+'</small>').openPopup();
+    map.setView([lat, lon], 12);
+  };
+  const fail = err => {
+    restore();
+    const m = err && err.code === 1 ? 'Permesso negato: consenti la posizione per questo sito (impostazioni browser/telefono) e riprova.'
+            : err && err.code === 2 ? 'Posizione non disponibile: nessun segnale GPS. Prova all’aperto con il GPS attivo.'
+            : err && err.code === 3 ? 'Tempo scaduto: il GPS non ha risposto. Riprova all’aperto.'
+            : ('Impossibile ottenere la posizione' + (err && err.message ? ': ' + err.message : '.'));
+    alert(m);
+  };
+  navigator.geolocation.getCurrentPosition(show, e1 => {
+    if (e1 && e1.code === 3){
+      navigator.geolocation.getCurrentPosition(show, fail, { enableHighAccuracy:false, timeout:20000, maximumAge:120000 });
+    } else { fail(e1); }
+  }, { enableHighAccuracy:true, timeout:12000, maximumAge:30000 });
 });
 
 // === DOWNLOAD helper ===
