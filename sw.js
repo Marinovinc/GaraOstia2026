@@ -1,9 +1,9 @@
 /* Service worker IschiaFishing - cache app shell per uso offline (modalita barca).
    Strategia: cache-first per gli asset locali; rete per i tile satellitari live. */
-const CACHE = 'ischiafishing-v25';
+const CACHE = 'ischiafishing-v26';
 const SHELL = [
   'index.html', 'campo_gara.js', 'front_drift.js', 'gara_plan.js', 'isobate.js', 'dropoff.js', 'manifest.webmanifest',
-  'lib/leaflet.js', 'lib/leaflet.css', 'icon-192.png', 'icon-512.png'
+  'lib/leaflet.js', 'lib/leaflet.css', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
