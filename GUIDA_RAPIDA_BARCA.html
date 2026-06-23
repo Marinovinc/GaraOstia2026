@@ -1,159 +1,170 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="utf-8">
-<title>Guida Rapida Barca - Ostia 2026</title>
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guida Rapida - Ostia 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @page { size: A4 portrait; margin: 8mm; }
-  * { box-sizing: border-box; }
-  body { font-family: "Segoe UI", Arial, sans-serif; color: #111; margin: 0; font-size: 10pt; line-height: 1.28; }
-  h1 { font-size: 17pt; margin: 0; color: #0b3; color: #14533a; }
-  .top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px solid #14533a; padding-bottom: 3px; }
-  .top .s { font-size: 8pt; color: #666; }
-  .gold { background: #fff4cf; border: 2px solid #e0b020; border-radius: 7px; padding: 7px 10px; margin: 7px 0; text-align: center; }
-  .gold b { font-size: 13pt; color: #8a6300; }
-  .gold .d { font-size: 12pt; margin-top: 2px; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin: 7px 0; }
-  .spot { border-radius: 7px; padding: 7px 9px; color: #fff; }
-  .spot .t { font-size: 11pt; font-weight: 700; }
-  .spot .c { font-family: Consolas, monospace; font-size: 11pt; font-weight: 700; margin: 3px 0; letter-spacing: .3px; }
-  .spot .n { font-size: 8.5pt; opacity: .95; }
-  .red { background: #c0392b; } .grn { background: #1a7f4b; } .org { background: #cf7510; }
-  .cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 9px; margin-top: 4px; }
-  h2 { font-size: 10.5pt; color: #14533a; margin: 8px 0 3px; border-bottom: 1px solid #1a7f4b; padding-bottom: 2px; }
-  table { width: 100%; border-collapse: collapse; font-size: 9pt; }
-  td, th { border: 1px solid #c7d2dc; padding: 2px 5px; text-align: left; }
-  th { background: #eaf3ee; }
-  ul { margin: 3px 0; padding-left: 16px; } li { margin: 1px 0; }
-  .rule { background: #fbe9e7; border: 2px solid #c0392b; border-radius: 7px; padding: 6px 10px; text-align: center; font-weight: 700; color: #a93226; margin-top: 7px; font-size: 10.5pt; }
-  .mono { font-family: Consolas, monospace; }
-  .small { font-size: 8pt; color: #777; }
-</style>
-</head>
-<body>
+:root{--paper:#F1ECDE;--paper-2:#FAF6E8;--paper-3:#ECE5D2;--ink:#181715;--ink-2:#4A4842;--ink-3:#7F7C73;
+--rule:#C9BFA8;--rule-2:#8E8470;--navy:#0E2A40;--navy-2:#1F4660;--sea:#2D6E5F;
+--brass:#9C6D14;--brass-2:#C18B25;--rust:#9A3A1C;--rust-2:#C75B2E;--amber:#BC8024;
+--bg-warn:#FBF3E0;--bg-info:#E8F0EE;--bg-danger:#F7E9E2;}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:"Public Sans",sans-serif;font-size:15px;line-height:1.6}
+body{background-image:radial-gradient(rgba(120,100,70,.04) 1px,transparent 1px),radial-gradient(rgba(120,100,70,.03) 1px,transparent 1px);background-size:24px 24px,13px 13px;background-position:0 0,7px 7px}
+.wrap{max-width:920px;margin:0 auto;padding:26px 22px 60px}
+h1,h2,h3,h4{font-family:"Fraunces",serif;font-weight:500;color:var(--ink);letter-spacing:-.01em;margin:0}
+.mono,.num{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum" 1}
+a{color:var(--navy-2)}
+.masthead{border-top:5px double var(--ink);border-bottom:1px solid var(--ink);padding:14px 0 16px;margin-bottom:8px}
+.mh-kicker{text-align:center;letter-spacing:.32em;font-size:.68rem;text-transform:uppercase;color:var(--brass);font-weight:700;margin-bottom:10px}
+.mh-title{text-align:center;font-size:3.2rem;line-height:1.02;color:var(--navy)}
+.mh-sub{text-align:center;color:var(--ink-2);font-size:1rem;margin-top:8px;font-style:italic;font-family:"Fraunces",serif}
+.dateline{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:7px 2px;margin:14px 0 0;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.toc-h{text-align:center;font-family:"Fraunces",serif;font-style:italic;font-size:1.6rem;color:var(--navy);margin:28px 0 16px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toc-card{display:flex;gap:13px;align-items:flex-start;padding:13px 15px;background:var(--paper-2);border:1px solid var(--rule);border-left:4px solid var(--brass);border-radius:3px;text-decoration:none;color:inherit}
+.toc-card:hover{background:var(--paper-3)}
+.toc-n{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.5rem;color:var(--brass);width:26px;flex-shrink:0}
+.toc-t{font-size:.92rem;font-weight:700;color:var(--navy)} .toc-d{font-size:.76rem;color:var(--ink-3);line-height:1.3}
+section{margin:38px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:18px}
+.sec-num{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.5rem;color:var(--brass)}
+.sec-head h2{font-size:1.5rem}
+.lead{font-size:1.05rem;color:var(--ink-2);margin:0 0 16px;max-width:82ch}
+.lead .drop{float:left;font-family:"Fraunces",serif;font-size:3.1rem;line-height:.8;padding:6px 10px 0 0;color:var(--rust)}
+.call{border-left:4px solid var(--brass);background:var(--bg-warn);padding:13px 16px;margin:16px 0;border-radius:0 3px 3px 0;font-size:.92rem}
+.call.info{border-color:var(--sea);background:var(--bg-info)} .call.danger{border-color:var(--rust);background:var(--bg-danger)}
+.call .lab{font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.68rem;display:block;margin-bottom:4px;color:var(--ink-2)}
+table{width:100%;border-collapse:collapse;font-size:.84rem;margin:16px 0}
+th,td{border:1px solid var(--rule);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:var(--paper-2);font-weight:600;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+tr:nth-child(even) td{background:var(--paper-2)}
+td.num,th.num{font-family:"IBM Plex Mono",monospace}
+.hot{color:var(--rust);font-weight:700}
+.tag{display:inline-block;font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:var(--navy);color:var(--paper-2)}
+.tag.b{background:var(--brass);color:#231a05} .tag.r{background:var(--rust)} .tag.s{background:var(--sea)}
+ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
+.btn3d{display:inline-block;background:var(--navy);color:var(--paper-2);text-decoration:none;font-weight:700;padding:11px 18px;border-radius:4px;font-size:.95rem;letter-spacing:.02em}
+.colophon{border-top:5px double var(--ink);margin-top:50px;padding-top:16px;font-size:.78rem;color:var(--ink-3);text-align:center}
+@media(max-width:760px){.toc-grid{grid-template-columns:1fr}.mh-title{font-size:2.3rem}}
+</style></head><body><div class="wrap">
 
-<div class="top">
-  <h1>GUIDA RAPIDA &mdash; OSTIA 2026</h1>
-  <span class="s">62&deg; CI Traina Altura &middot; Ven 26 / Sab 27 giu &middot; start 08:00&ndash;08:30 &middot; ASD IschiaFishing</span>
+<div class="masthead">
+ <div class="mh-kicker">ASD IschiaFishing &middot; Guida di bordo</div>
+ <h1 class="mh-title">Guida Rapida &mdash; Ostia 2026</h1>
+ <div class="mh-sub">62&deg; Campionato Italiano Assoluto di Traina d'Altura</div>
+ <div class="dateline"><span>Manche &middot; Ven 26 / Sab 27 giu 2026</span><span>Start &middot; 08:00&ndash;08:30</span><span>Base &middot; Ostia</span><span>Max &middot; 7 h</span></div>
 </div>
 
-<div class="gold">
-  <b>FINESTRA D'ORO = solunare in riflusso (mattino)</b><br>
-  <span class="d"><b>VEN 26: 09:17&ndash;11:17</b> &nbsp;|&nbsp; <b>SAB 27: 10:06&ndash;12:06</b> &mdash; in quel momento sii sullo SPOT/PRIME</span>
+<div class="toc-h">Sommario</div>
+<div class="toc-grid">
+ <a class="toc-card" href="#s1"><span class="toc-n">I</span><span><span class="toc-t">Colpo d'occhio</span><br><span class="toc-d">finestra d'oro, i 3 spot, campo 3D</span></span></a>
+ <a class="toc-card" href="#s2"><span class="toc-n">II</span><span><span class="toc-t">Le due partite</span><br><span class="toc-d">mattino fronte, pomeriggio struttura</span></span></a>
+ <a class="toc-card" href="#s3"><span class="toc-n">III</span><span><span class="toc-t">I tre segnali</span><br><span class="toc-d">color line, termico, drop-off</span></span></a>
+ <a class="toc-card" href="#s4"><span class="toc-n">IV</span><span><span class="toc-t">Le rotte</span><br><span class="toc-d">A / B / C: quale e perche'</span></span></a>
+ <a class="toc-card" href="#s5"><span class="toc-n">V</span><span><span class="toc-t">Tecnica di traina</span><br><span class="toc-d">quote, velocita', stop&amp;go, esche</span></span></a>
+ <a class="toc-card" href="#s6"><span class="toc-n">VI</span><span><span class="toc-t">Punteggio e marea</span><br><span class="toc-d">specie, coefficienti, orari</span></span></a>
+ <a class="toc-card" href="#s7"><span class="toc-n">VII</span><span><span class="toc-t">Campo e regole</span><br><span class="toc-d">vertici, divieti, cosa annulla</span></span></a>
+ <a class="toc-card" href="#s8"><span class="toc-n">VIII</span><span><span class="toc-t">App a bordo</span><br><span class="toc-d">campo 3D + app gara</span></span></a>
 </div>
 
-<div style="text-align:center; margin:7px 0;">
-  <a href="https://marinovinc.github.io/CampoGara3D/" target="_blank" rel="noopener"
-     style="display:inline-block; background:#14533a; color:#fff; text-decoration:none; font-weight:700; font-size:11pt; padding:8px 16px; border-radius:7px;">
-    CAMPO GARA IN 3D &mdash; ruota e zooma con le dita &rarr;</a>
-  <div class="small">marinovinc.github.io/CampoGara3D &middot; aprilo una volta con rete, poi funziona offline</div>
-</div>
+<section id="s1">
+ <div class="sec-head"><span class="sec-num">I</span><h2>Colpo d'occhio</h2></div>
+ <p class="lead"><span class="drop">L</span>a giornata si gioca sul <b>fronte del Tevere</b> e sulla <b>struttura del fondale</b>. Nella finestra d'oro devi gia' essere in pesca sullo spot, non in trasferimento.</p>
 
-<div class="grid3">
-  <div class="spot red"><div class="t">TONNI &times;2 &mdash; NE</div><div class="c">41.673 N<br>12.097 E</div><div class="n">Rottura ~148 m off Porto di Roma. Acqua piu' produttiva (CHL max). Zona flotta.</div></div>
-  <div class="spot grn"><div class="t">ALALUNGA &mdash; banco</div><div class="c">41.554 N<br>11.861 E</div><div class="n">Banco ~717 m (rilievo). Traina l'orlo. Linea 1000 m "alla Ischia".</div></div>
-  <div class="spot org"><div class="t">SPADA &mdash; muro</div><div class="c">41.530 N<br>11.873 E</div><div class="n">Drop-off 76% / 924 m. Profondo, stop&amp;go. Alba/cambio luce.</div></div>
-</div>
+ <div class="call"><span class="lab">Finestra d'oro &mdash; solunare in riflusso (mattino)</span>
+  <b>VEN 26: 09:17&ndash;11:17</b> &nbsp;|&nbsp; <b>SAB 27: 10:06&ndash;12:06</b> &mdash; in quel momento sii sullo SPOT con le esche in acqua.</div>
 
-<div class="cols">
-  <div>
-    <h2>ROTTE (scegline una; prime nel solunare)</h2>
-    <ul>
-      <li><b>A</b> &mdash; <b>NE 148 m</b> (tonni nel solunare) &rarr; SW banco/scarpata (alalunga/spada). <i>Consigliata.</i></li>
-      <li><b>B</b> &mdash; tutto sulla <b>scarpata profonda SW</b> (banco+muri): alalunga/spada.</li>
-      <li><b>C</b> &mdash; tutto sul <b>bordo NE 148&ndash;300 m</b>: tonni.</li>
-    </ul>
-    <h2>QUOTE / VELOCITA'</h2>
-    <ul>
-      <li>Spread superficie <b>0&ndash;6 m</b>; 1 canna affondata <b>2&times;500 g &asymp; 11 m</b>.</li>
-      <li><b>6&ndash;7 kn</b> (6&ndash;6,5 per scendere/tonno; 7 per coprire). Stop&amp;go sul marcato.</li>
-      <li>Esca principe alalunga: <b>Halco Laser Pro 160 viola</b>.</li>
-    </ul>
-  </div>
-  <div>
-    <h2>PUNTEGGIO (a rilascio)</h2>
-    <table>
-      <tr><th>Specie</th><th>Min</th><th>Coef</th></tr>
-      <tr><td><b>Tonno rosso</b></td><td>80 cm</td><td><b>&times;2</b></td></tr>
-      <tr><td>Spada / Aguglia imp. / Marlin</td><td>130 cm</td><td>&times;1</td></tr>
-      <tr><td>Alalunga / Striato / Alletterato / Lampuga</td><td>60 cm</td><td>&times;1</td></tr>
-      <tr><td>Altri sportivi (palamita, ricciola)</td><td>60 cm</td><td>&times;1 (+3kg)</td></tr>
-    </table>
-    <p class="small">Tonno rosso vale doppio. Tutto il resto fa numero.</p>
-    <h2>MAREA</h2>
-    <table>
-      <tr><th></th><th>Alta</th><th>Bassa</th></tr>
-      <tr><td>Ven 26</td><td>07:54</td><td>14:09</td></tr>
-      <tr><td>Sab 27</td><td>08:42</td><td>14:49</td></tr>
-    </table>
-    <p class="small">Riflusso (alta&rarr;bassa) per quasi tutta la manche.</p>
-  </div>
-</div>
+ <table>
+  <tr><th>Spot</th><th class="num">Posizione</th><th>Perche'</th></tr>
+  <tr><td><span class="tag r">Tonni &times;2</span> NE</td><td class="num">41.673 N<br>12.097 E</td><td>Rottura ~148 m off Porto di Roma. Acqua piu' produttiva (CHL max). Zona flotta.</td></tr>
+  <tr><td><span class="tag s">Alalunga</span> banco</td><td class="num">41.554 N<br>11.861 E</td><td>Banco ~717 m (rilievo). Traina l'orlo. Linea 1000 m "alla Ischia".</td></tr>
+  <tr><td><span class="tag b">Spada</span> muro</td><td class="num">41.530 N<br>11.873 E</td><td>Drop-off 76% / 924 m. Profondo, stop&amp;go. Alba / cambio luce.</td></tr>
+ </table>
 
-<div class="cols">
-  <div>
-    <h2>CAMPO (vertici)</h2>
-    <span class="mono small">V1 41.7037/12.0027 &middot; V2 41.5371/12.0981 &middot; V3 41.4776/11.8848 &middot; V4 41.6304/11.7738</span>
-  </div>
-  <div>
-    <h2>ANNULLA TUTTO</h2>
-    <span class="small">Taglio madre = squalifica &middot; ferrata fuori campo = rilascio non valido &middot; rottura/raddoppio = non valido.</span>
-  </div>
-</div>
+ <div class="call info"><span class="lab">Campo gara in 3D</span>
+  Ruota e zooma il fondale con le dita prima di pescarlo:<br>
+  <a class="btn3d" href="https://marinovinc.github.io/CampoGara3D/" target="_blank" rel="noopener">Apri il Campo Gara 3D &rarr;</a><br>
+  <span class="mono" style="font-size:.8rem;color:var(--ink-3)">marinovinc.github.io/CampoGara3D &middot; aprilo con rete, poi resta in cache offline</span></div>
+</section>
 
-<div class="rule">RADIO: appena qualcuno annuncia una MANGIANZA, molla il piano e CONVERGI. Il pesce che mangia batte la mappa.</div>
+<section id="s2">
+ <div class="sec-head"><span class="sec-num">II</span><h2>Le due partite della giornata</h2></div>
+ <p class="lead">A governare la giornata e' il <b>vento</b>: cambia il bersaglio tra mattino e pomeriggio.</p>
+ <ul>
+  <li><b>Mattino = il FRONTE.</b> Con vento debole la <b>color line del Tevere</b> (dove l'acqua verde del fiume incontra il blu del mare) resta ferma. Si traina <b>il bordo blu</b>, non l'acqua verde piena: il pesce grosso caccia <i>sul confine</i>. Clou nella finestra d'oro.</li>
+  <li><b>Pomeriggio = la STRUTTURA.</b> La brezza da SW-W rinforza e <b>spinge il fronte verso costa (NE)</b>: il fronte non sparisce, <b>si sposta</b>. Si passa alla <b>scarpata/canyon SW</b> (banco e muri), dove il vento fa <b>risalire acqua fredda e foraggio</b> (upwelling) &rarr; alalunga profonda e spada.</li>
+ </ul>
+</section>
 
-<p class="small" style="text-align:center;margin-top:4px;">La sera prima: app &rarr; "Aggiorna su CHL di stasera" per ritarare il PRIME &middot; pomeriggio brezza SW-W, rientro NE per tempo.</p>
-
-<hr style="border:none;border-top:2px solid #14533a;margin:14px 0 6px;">
-<h1 style="font-size:14pt;">SPIEGAZIONE COMPLETA &mdash; come ragionare in mare</h1>
-
-<h2>1. La giornata ha DUE partite (le governa il vento)</h2>
-<ul>
-  <li><b>Mattino = il FRONTE.</b> Con vento debole la <b>color line del Tevere</b> (la riga dove l'acqua verde del fiume incontra il blu del mare) resta ferma. Si traina <b>il bordo blu</b>, non l'acqua verde piena: il pesce grosso caccia <i>sul confine</i>. Il momento clou e' la <b>finestra d'oro (solunare)</b>.</li>
-  <li><b>Pomeriggio = la STRUTTURA.</b> La brezza da SW-W rinforza e <b>spinge il fronte verso costa (NE)</b>: il fronte non sparisce, <b>si sposta</b>. Si passa a lavorare la <b>scarpata/canyon SW</b> (banco e muri), dove il vento fa <b>risalire acqua fredda e foraggio</b> (upwelling) &rarr; alalunga profonda e spada.</li>
-</ul>
-
-<h2>2. Dove si nasconde il pesce: i 3 segnali sovrapposti</h2>
-<p>Il punto migliore e' dove <b>coincidono</b> tre cose. Cercale insieme:</p>
-<ul>
+<section id="s3">
+ <div class="sec-head"><span class="sec-num">III</span><h2>I tre segnali sovrapposti</h2></div>
+ <p class="lead">Il punto migliore e' dove <b>coincidono</b> tre cose. Cercale insieme.</p>
+ <ul>
   <li><b>Color line (clorofilla)</b> &mdash; cambio di colore dell'acqua, schiuma, legni, uccelli che lavorano. Visibile da satellite (app) e a vista.</li>
   <li><b>Salto di temperatura (SST)</b> &mdash; anche solo mezzo grado: spesso e' la stessa riga della color line.</li>
   <li><b>Drop-off / struttura</b> &mdash; il gradino di fondale (rottura 148 m, banco ~717 m, muro 924 m). Il fondale concentra il foraggio.</li>
-</ul>
+ </ul>
+ <div class="call"><span class="lab">Regola d'oro</span>Appena qualcuno in radio annuncia una <b>MANGIANZA</b>, molla il piano e <b>CONVERGI</b>. Il pesce che mangia batte qualsiasi mappa.</div>
+</section>
 
-<h2>3. La finestra d'oro (solunare) spiegata</h2>
-<p>E' la fascia oraria in cui il pesce mangia di piu' (legata a sole/luna), e qui cade in <b>riflusso di marea</b> del mattino. <b>VEN 26: 09:17&ndash;11:17 &middot; SAB 27: 10:06&ndash;12:06.</b> Regola: <b>in quel momento devi gia' essere sullo SPOT con le esche in pesca</b>, non in trasferimento. Cala lo spread 15&ndash;20 min prima.</p>
-
-<h2>4. Le 3 rotte &mdash; quale e perche'</h2>
-<ul>
-  <li><b>A (consigliata):</b> parti <b>NE sui 148 m</b> per i tonni dentro la finestra d'oro, poi scendi <b>SW</b> su banco/scarpata per alalunga e spada nel pomeriggio. Sfrutta entrambe le partite.</li>
-  <li><b>B:</b> tutto sulla <b>scarpata profonda SW</b> &mdash; se punti deciso ad alalunga/spada.</li>
+<section id="s4">
+ <div class="sec-head"><span class="sec-num">IV</span><h2>Le tre rotte &mdash; quale e perche'</h2></div>
+ <ul>
+  <li><b>A (consigliata):</b> parti <b>NE sui 148 m</b> per i tonni nella finestra d'oro, poi scendi <b>SW</b> su banco/scarpata per alalunga e spada nel pomeriggio. Sfrutta entrambe le partite.</li>
+  <li><b>B:</b> tutto sulla <b>scarpata profonda SW</b> (banco + muri) &mdash; se punti deciso ad alalunga/spada.</li>
   <li><b>C:</b> tutto sul <b>bordo NE 148&ndash;300 m</b> &mdash; se la giornata e' da tonni e la flotta li' marca.</li>
-</ul>
+ </ul>
+</section>
 
-<h2>5. Tecnica di traina</h2>
-<ul>
+<section id="s5">
+ <div class="sec-head"><span class="sec-num">V</span><h2>Tecnica di traina</h2></div>
+ <ul>
   <li><b>Spread 7 canne</b>, esche in superficie <b>0&ndash;6 m</b>; <b>1 canna affondata</b> 2&times;500 g &asymp; <b>11 m</b> sul marcato.</li>
   <li><b>Velocita' 6&ndash;7 kn</b>: 6&ndash;6,5 per scendere/tonno, 7 per coprire piu' acqua.</li>
-  <li><b>Stop&amp;go</b> quando l'ecoscandaglio marca: rallenta/folle per far affondare le esche, poi riprendi. Fallo sul <b>tratto dritto</b>, mai in virata stretta (le esche si intrecciano).</li>
+  <li><b>Stop&amp;go</b> quando l'ecoscandaglio marca: rallenta / folle per far affondare le esche, poi riprendi. Fallo sul <b>tratto dritto</b>, mai in virata stretta (le esche si intrecciano).</li>
   <li>Esca principe alalunga: <b>Halco Laser Pro 160 viola</b>.</li>
-</ul>
+ </ul>
+</section>
 
-<h2>6. Sicurezza e regole che annullano tutto</h2>
-<ul>
-  <li><b>AMP / aree di divieto:</b> NON entrare. Combatti il pesce <b>verso l'interno</b> del campo: una ferrata o un recupero <b>fuori campo non vale</b>.</li>
-  <li><b>Taglio della lenza madre = squalifica.</b> Rottura o raddoppio durante il combattimento = cattura non valida.</li>
-  <li><b>Pomeriggio:</b> con la brezza SW-W che rinforza, <b>rientra a NE per tempo</b> (mare di prua/traverso al ritorno).</li>
-</ul>
+<section id="s6">
+ <div class="sec-head"><span class="sec-num">VI</span><h2>Punteggio e marea</h2></div>
+ <table>
+  <tr><th>Specie</th><th class="num">Misura min</th><th class="num">Coef.</th></tr>
+  <tr><td><b>Tonno rosso</b></td><td class="num">80 cm</td><td class="num hot">&times;2</td></tr>
+  <tr><td>Spada / Aguglia imp. / Marlin</td><td class="num">130 cm</td><td class="num">&times;1</td></tr>
+  <tr><td>Alalunga / Striato / Alletterato / Lampuga</td><td class="num">60 cm</td><td class="num">&times;1</td></tr>
+  <tr><td>Altri sportivi (palamita, ricciola)</td><td class="num">60 cm</td><td class="num">&times;1 (+3kg)</td></tr>
+ </table>
+ <p style="font-size:.85rem;color:var(--ink-3)">Tonno rosso vale doppio. Tutto il resto fa numero. Punteggio a rilascio.</p>
+ <table>
+  <tr><th></th><th class="num">Alta</th><th class="num">Bassa</th></tr>
+  <tr><td>Ven 26</td><td class="num">07:54</td><td class="num">14:09</td></tr>
+  <tr><td>Sab 27</td><td class="num">08:42</td><td class="num">14:49</td></tr>
+ </table>
+ <p style="font-size:.85rem;color:var(--ink-3)">Riflusso (alta&rarr;bassa) per quasi tutta la manche &mdash; la finestra d'oro ci cade dentro.</p>
+</section>
 
-<h2>7. Le app a bordo</h2>
-<ul>
-  <li><b>Campo gara 3D</b> (link verde in alto): ruota/zooma il fondale con le dita per capire banco, muri e drop-off prima di pescarli.</li>
+<section id="s7">
+ <div class="sec-head"><span class="sec-num">VII</span><h2>Campo e regole</h2></div>
+ <p><b>Vertici del campo</b><br>
+ <span class="mono" style="font-size:.85rem">V1 41.7037/12.0027 &middot; V2 41.5371/12.0981 &middot; V3 41.4776/11.8848 &middot; V4 41.6304/11.7738</span></p>
+ <div class="call danger"><span class="lab">Annulla tutto</span>
+  <b>AMP / aree di divieto:</b> NON entrare; combatti il pesce <b>verso l'interno</b> del campo (ferrata o recupero fuori campo = <b>non valido</b>). <b>Taglio della lenza madre = squalifica.</b> Rottura o raddoppio in combattimento = cattura non valida.</div>
+ <div class="call"><span class="lab">Rientro</span>Pomeriggio: con la brezza SW-W che rinforza, <b>rientra a NE per tempo</b> (mare di prua/traverso al ritorno).</div>
+</section>
+
+<section id="s8">
+ <div class="sec-head"><span class="sec-num">VIII</span><h2>App a bordo</h2></div>
+ <ul>
+  <li><b>Campo gara 3D</b> (sezione I): ruota/zooma il fondale con le dita per capire banco, muri e drop-off prima di pescarli.</li>
   <li><b>App gara</b> (clorofilla + batimetria + rotte): la sera prima <b>aggiorna sulla CHL di stasera</b> per ritarare il PRIME del giorno. Aprila <b>con rete prima di salpare</b>: poi funziona offline.</li>
-</ul>
+ </ul>
+</section>
 
-<div class="rule" style="margin-top:10px;">REGOLA D'ORO: appena qualcuno in radio annuncia una MANGIANZA, molla il piano e CONVERGI. Il pesce che mangia batte qualsiasi mappa.</div>
+<div class="colophon">
+ Guida Rapida &mdash; Ostia 2026 &middot; ASD IschiaFishing<br>
+ 62&deg; Campionato Italiano Assoluto di Traina d'Altura &middot; 26&ndash;27 giugno 2026 &middot; documento di bordo, leggibile offline
+</div>
 
-</body>
-</html>
+</div></body></html>
