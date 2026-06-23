@@ -167,7 +167,7 @@ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
 
  <table>
   <tr><th>Spot</th><th class="num">Posizione</th><th>Perche'</th></tr>
-  <tr><td><span class="tag r">Tonni &times;2</span> NE</td><td class="num">41.673 N<br>12.097 E</td><td>Rottura ~148 m off Porto di Roma. Acqua piu' produttiva (CHL max). Zona flotta.</td></tr>
+  <tr><td><span class="tag r">Tonni &times;2</span> NE</td><td class="num">41.675 N<br>11.990 E</td><td>Angolo NE produttivo del campo: CHL piu' alta e break sul bordo. Prime tonni nel solunare. Zona flotta.</td></tr>
   <tr><td><span class="tag s">Alalunga</span> banco</td><td class="num">41.554 N<br>11.861 E</td><td>Banco ~717 m (rilievo). Traina l'orlo. Linea 1000 m "alla Ischia".</td></tr>
   <tr><td><span class="tag b">Spada</span> muro</td><td class="num">41.530 N<br>11.873 E</td><td>Drop-off 76% / 924 m. Profondo, stop&amp;go. Alba / cambio luce.</td></tr>
  </table>
@@ -188,7 +188,7 @@ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
   </g>
   <!-- i 3 spot -->
   <g font-size="15" font-weight="700">
-   <circle cx="631" cy="146" r="10" fill="#9A3A1C" stroke="#fff" stroke-width="2"/><text x="619" y="133" text-anchor="end" fill="#9A3A1C">Tonni &times;2 (NE)</text>
+   <circle cx="444" cy="142" r="10" fill="#9A3A1C" stroke="#fff" stroke-width="2"/><text x="458" y="138" fill="#9A3A1C">Tonni &times;2 (NE in-campo)</text>
    <circle cx="219" cy="424" r="10" fill="#2D6E5F" stroke="#fff" stroke-width="2"/><text x="235" y="420" fill="#2D6E5F">Alalunga (banco ~717 m)</text>
    <circle cx="240" cy="480" r="10" fill="#9C6D14" stroke="#fff" stroke-width="2"/><text x="256" y="500" fill="#9C6D14">Spada (muro 924 m)</text>
   </g>
@@ -295,7 +295,7 @@ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
  <ul>
   <li><b>Color line (clorofilla)</b> &mdash; cambio di colore dell'acqua, schiuma, legni, uccelli che lavorano. Visibile da satellite (app) e a vista.</li>
   <li><b>Salto di temperatura (SST)</b> &mdash; anche solo mezzo grado: spesso e' la stessa riga della color line.</li>
-  <li><b>Drop-off / struttura</b> &mdash; il gradino di fondale (rottura 148 m, banco ~717 m, muro 924 m). Il fondale concentra il foraggio.</li>
+  <li><b>Drop-off / struttura</b> &mdash; il gradino di fondale (banco ~717 m, muro 924 m, break del bordo NE). Il fondale concentra il foraggio.</li>
  </ul>
  <div class="call"><span class="lab">Regola d'oro</span>Appena qualcuno in radio annuncia una <b>MANGIANZA</b>, molla il piano e <b>CONVERGI</b>. Il pesce che mangia batte qualsiasi mappa.</div>
 </section>
@@ -327,40 +327,40 @@ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
    <circle cx="67" cy="246" r="4"/><text x="59" y="242" text-anchor="end">V4</text>
   </g>
 
-  <!-- ROTTA C: bordo NE 148-300 m (tonni) -->
-  <path d="M470,96 L631,146 L612,300" fill="none" stroke="#9A3A1C" stroke-width="4" marker-end="url(#aC)"/>
-  <text x="648" y="232" fill="#9A3A1C" font-size="22" font-weight="700">C</text>
+  <!-- ROTTA C: bordo NE produttivo IN-CAMPO (tonni) -->
+  <path d="M468,108 L444,142 L388,182 L424,224" fill="none" stroke="#9A3A1C" stroke-width="4" marker-end="url(#aC)"/>
+  <text x="404" y="246" fill="#9A3A1C" font-size="22" font-weight="700">C</text>
 
   <!-- ROTTA B: scarpata profonda SW (banco + muri) -->
   <path d="M150,330 L219,424 L240,480 L262,556" fill="none" stroke="#2D6E5F" stroke-width="4" marker-end="url(#aB)"/>
   <text x="120" y="352" fill="#2D6E5F" font-size="22" font-weight="700">B</text>
 
-  <!-- ROTTA A (consigliata): NE tonni -> SW banco/scarpata -->
-  <path d="M631,146 Q512,440 244,452" fill="none" stroke="#9C6D14" stroke-width="6" marker-end="url(#aA)"/>
-  <text x="430" y="318" fill="#9C6D14" font-size="22" font-weight="700">A</text>
-  <text x="452" y="318" fill="#9C6D14" font-size="14" font-weight="700"> &middot; consigliata</text>
+  <!-- ROTTA A (consigliata): NE in-campo -> SW banco/scarpata -->
+  <path d="M444,142 Q352,330 240,456" fill="none" stroke="#9C6D14" stroke-width="6" marker-end="url(#aA)"/>
+  <text x="356" y="300" fill="#9C6D14" font-size="22" font-weight="700">A</text>
+  <text x="378" y="300" fill="#9C6D14" font-size="14" font-weight="700"> &middot; consigliata</text>
 
   <!-- SPOT (sopra le rotte) -->
   <g font-size="14" font-weight="700">
-   <circle cx="631" cy="146" r="9" fill="#9A3A1C" stroke="#fff" stroke-width="2"/><text x="620" y="134" text-anchor="end" fill="#9A3A1C">Tonni &times;2 (NE)</text>
+   <circle cx="444" cy="142" r="9" fill="#9A3A1C" stroke="#fff" stroke-width="2"/><text x="458" y="134" fill="#9A3A1C">Tonni &times;2 (NE in-campo)</text>
    <circle cx="219" cy="424" r="9" fill="#2D6E5F" stroke="#fff" stroke-width="2"/><text x="233" y="420" fill="#2D6E5F">Alalunga (banco ~717 m)</text>
    <circle cx="240" cy="480" r="9" fill="#9C6D14" stroke="#fff" stroke-width="2"/><text x="254" y="500" fill="#9C6D14">Spada (muro 924 m)</text>
   </g>
 
   <!-- legenda -->
   <g font-size="14" transform="translate(150,665)">
-   <rect x="0" y="-11" width="22" height="6" fill="#9C6D14"/><text x="28" y="-4" fill="#181715">A &mdash; NE tonni &rarr; SW (consigliata)</text>
+   <rect x="0" y="-11" width="22" height="6" fill="#9C6D14"/><text x="28" y="-4" fill="#181715">A &mdash; NE in-campo &rarr; SW (consigliata)</text>
    <rect x="0" y="9" width="22" height="6" fill="#2D6E5F"/><text x="28" y="16" fill="#181715">B &mdash; scarpata profonda SW</text>
-   <rect x="280" y="-11" width="22" height="6" fill="#9A3A1C"/><text x="308" y="-4" fill="#181715">C &mdash; bordo NE 148&ndash;300 m</text>
+   <rect x="280" y="-11" width="22" height="6" fill="#9A3A1C"/><text x="308" y="-4" fill="#181715">C &mdash; bordo NE in-campo (tonni)</text>
   </g>
  </svg>
- <figcaption>Le tre rotte sul campo gara. A sfrutta entrambe le partite (tonni la mattina, profondo il pomeriggio); B punta tutto sul profondo SW; C resta sul bordo NE dei tonni.</figcaption>
+ <figcaption>Le tre rotte dentro il campo gara. A sfrutta entrambe le partite (tonni NE la mattina, profondo SW il pomeriggio); B tutto sul profondo SW; C resta sul bordo NE produttivo.</figcaption>
  </figure>
 
  <ul>
-  <li><b>A (consigliata):</b> parti <b>NE sui 148 m</b> per i tonni nella finestra d'oro, poi scendi <b>SW</b> su banco/scarpata per alalunga e spada nel pomeriggio. Sfrutta entrambe le partite.</li>
+  <li><b>A (consigliata):</b> parti sull'<b>angolo NE produttivo</b> del campo per i tonni nel solunare, poi scendi <b>SW</b> su banco/scarpata per alalunga e spada nel pomeriggio. Sfrutta entrambe le partite.</li>
   <li><b>B:</b> tutto sulla <b>scarpata profonda SW</b> (banco + muri) &mdash; se punti deciso ad alalunga/spada.</li>
-  <li><b>C:</b> tutto sul <b>bordo NE 148&ndash;300 m</b> &mdash; se la giornata e' da tonni e la flotta li' marca.</li>
+  <li><b>C:</b> tutto sul <b>bordo NE produttivo in-campo</b> &mdash; se la giornata e' da tonni e la flotta li' marca.</li>
  </ul>
 </section>
 
