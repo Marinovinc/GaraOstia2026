@@ -1,0 +1,9 @@
+=== forio_01.jpg (27843 bytes) ===
+OBAL BATHYMETRY SYMBOL (used by all mini-maps via <use>) --> <svg width="0" height="0" style="position:absolute" aria-hidden="true"> <defs> <symbol id="bathMiniBg" viewBox="0 0 580 290"> <image href="
+
+=== forio_02.jpg (49398 bytes) ===
+rid 13°15-14°30 E, 40°30-40°45 N) --> <defs> <clipPath id="mapViewClip"> <rect x="0" y="0" width="900" height="790"/> </clipPath> </defs> <g clip-path="url(#mapViewClip)" opacity="0.72"> <image href="
+
+=== forio_03.jpg (49398 bytes) ===
+dth="900" height="790" fill="#0A1929"/> <defs><clipPath id="routeMapClip"><rect x="0" y="0" width="900" height="790"/></clipPath></defs> <g clip-path="url(#routeMapClip)" opacity="0.72"> <image href="
+

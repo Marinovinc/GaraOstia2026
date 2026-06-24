@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rotta A">
+<meta name="theme-color" content="#0E2A40">
+<meta name="format-detection" content="telephone=no">
+<title>Rotta A &mdash; la migliore | Gara Ostia 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root{
+  --paper:#F1ECDE; --paper-2:#FAF6E8; --paper-3:#ECE5D2;
+  --ink:#181715; --ink-2:#4A4842; --ink-3:#7F7C73;
+  --blu:#0E2A40; --oro:#9C6D14; --verde:#2D6E5F; --rosso:#9A3A1C;
+  --line:#C9BFA8; --cyan:#13c0d4;
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); line-height:1.6; font-size:17px;
+}
+.wrap{max-width:840px; margin:0 auto; padding:34px 22px 90px}
+
+/* HERO */
+.hero{
+  background:var(--blu); color:#FAF6E8; border-radius:4px;
+  padding:30px 28px; margin-bottom:30px;
+  box-shadow:0 8px 30px rgba(14,42,64,.22);
+}
+.kicker{font-family:var(--mono); font-size:.78rem; letter-spacing:.16em;
+  text-transform:uppercase; color:#C9B98A; margin:0 0 8px}
+.hero h1{font-family:var(--serif); font-weight:700; font-size:2.35rem;
+  line-height:1.08; margin:0 0 10px}
+.hero h1 .ev{color:#E7B84B}
+.hero p{margin:0; color:#D8E0E8; font-size:1.02rem}
+.badge{display:inline-block; background:var(--oro); color:#fff;
+  font-family:var(--mono); font-weight:600; font-size:.8rem;
+  padding:4px 12px; border-radius:30px; margin-bottom:14px; letter-spacing:.04em}
+
+/* SECTIONS */
+section{margin:34px 0}
+.sec-head{display:flex; align-items:center; gap:12px; margin:0 0 8px}
+.sec-num{font-family:var(--mono); font-weight:600; font-size:.85rem;
+  color:#fff; background:var(--blu); width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto}
+h2{font-family:var(--serif); font-weight:600; font-size:1.5rem; color:var(--blu); margin:0}
+h3{font-family:var(--serif); font-weight:600; font-size:1.12rem; color:var(--ink); margin:22px 0 6px}
+.lead{font-size:1.05rem; color:var(--ink-2); margin:.2em 0 1em}
+.drop{float:left; font-family:var(--serif); font-weight:700; font-size:3.1rem;
+  line-height:.8; color:var(--oro); padding:6px 10px 0 0}
+
+/* CALLOUTS */
+.call{background:var(--paper-2); border:1px solid var(--line);
+  border-left:4px solid var(--oro); border-radius:0 4px 4px 0;
+  padding:13px 16px; margin:14px 0; font-size:.96rem}
+.call.win{border-left-color:var(--rosso)}
+.call.info{border-left-color:var(--blu)}
+.lab{display:block; font-family:var(--mono); font-size:.74rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:5px; font-weight:600}
+
+/* WHY GRID */
+.why{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:680px){.why{grid-template-columns:1fr 1fr 1fr}}
+.card{background:var(--paper-2); border:1px solid var(--line); border-radius:4px; padding:16px 16px 18px}
+.card .n{font-family:var(--serif); font-weight:700; font-size:1.9rem; color:var(--oro); line-height:1}
+.card h4{font-family:var(--serif); font-weight:600; font-size:1.05rem; margin:8px 0 6px; color:var(--blu)}
+.card p{margin:0; font-size:.92rem; color:var(--ink-2)}
+
+/* MAP */
+figure{margin:18px 0}
+.rmap{background:var(--paper-3); border:1px solid var(--line); border-radius:4px; padding:8px}
+figcaption{font-size:.85rem; color:var(--ink-3); margin-top:8px; text-align:center}
+
+/* WAYPOINT LIST */
+.wp{list-style:none; margin:0; padding:0; counter-reset:wp}
+.wp li{position:relative; padding:12px 14px 12px 52px; border:1px solid var(--line);
+  border-radius:4px; background:var(--paper-2); margin:8px 0; font-size:.94rem}
+.wp li::before{counter-increment:wp; content:counter(wp);
+  position:absolute; left:12px; top:12px; width:28px; height:28px; border-radius:50%;
+  background:var(--oro); color:#fff; font-family:var(--mono); font-weight:600; font-size:.85rem;
+  display:flex; align-items:center; justify-content:center}
+.wp .t{font-family:var(--mono); font-weight:600; color:var(--blu)}
+.mono{font-family:var(--mono); font-size:.86em; background:var(--paper-3);
+  padding:1px 6px; border-radius:3px; color:var(--ink)}
+.nav{color:var(--ink-3); font-size:.88em}
+.wp li.start{border-left:4px solid var(--rosso)}
+.wp li.gold{border-left:4px solid var(--oro)}
+
+/* TABLE */
+table{width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem}
+th,td{text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top}
+th{background:var(--blu); color:#FAF6E8; font-family:var(--sans); font-weight:600; font-size:.84rem}
+tr:nth-child(even) td{background:var(--paper-2)}
+.tag{display:inline-block; font-family:var(--mono); font-size:.72rem; font-weight:600;
+  padding:2px 8px; border-radius:20px; color:#fff}
+.tag.r{background:var(--rosso)} .tag.s{background:var(--verde)} .tag.b{background:var(--oro)}
+
+/* CHECKLIST */
+.chk{list-style:none; margin:0; padding:0}
+.chk li{padding:9px 9px 9px 38px; position:relative; border-bottom:1px dashed var(--line); font-size:.96rem}
+.chk li::before{content:"\2713"; position:absolute; left:10px; top:9px;
+  color:var(--verde); font-weight:700}
+
+.foot{margin-top:46px; padding-top:16px; border-top:2px solid var(--line);
+  font-size:.82rem; color:var(--ink-3); font-family:var(--mono)}
+b{color:var(--ink)}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:11.2pt}
+  .wrap{max-width:none;margin:0;padding:0 6mm}
+  .hero{box-shadow:none}
+  section{margin:14px 0}
+  .lure,.card,figure,.call,.wp li,table,.why,.lures{break-inside:avoid}
+  tr,.cap{break-inside:avoid}
+  h1,h2,h3,h4{break-after:avoid}
+  a{color:inherit;text-decoration:none}
+  .btn3d{display:none}
+}
+@page{size:A4;margin:10mm}
+
+@media(max-width:600px){
+  body{font-size:16px}
+  .wrap{padding:18px 13px 70px}
+  .hero{padding:20px 16px}
+  .hero h1{font-size:1.62rem}
+  .drop{font-size:2.5rem}
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .lead{font-size:1rem}
+  .wp li{padding-left:46px}
+  h2{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <p class="kicker">Gara di traina d'altura &middot; Ostia &middot; giugno 2026</p>
+  <span class="badge">ROTTA CONSIGLIATA</span>
+  <h1>Rotta <span class="ev">A</span> &mdash; perch&eacute; &egrave; la migliore<br>e come pescarla</h1>
+  <p>NE produttivo nel solunare &rarr; scarpata SW nel pomeriggio. La rotta che gioca <b>entrambe le partite</b> della giornata e massimizza la probabilit&agrave; di fare punti.</p>
+</div>
+
+<!-- VERDETTO -->
+<section id="verdetto">
+  <div class="sec-head"><span class="sec-num">0</span><h2>Il verdetto in tre righe</h2></div>
+  <p class="lead"><span class="drop">A</span> &egrave; l'unica rotta che ti tiene <b>in pesca dentro il campo gi&agrave; alle 08:41</b>, cattura tutta la <b>finestra d'oro solunare</b> sul bordo NE (dove abboccano i <b>primi tonni della giornata</b>, il pesce che vale di pi&ugrave;), e poi <b>scende sulla struttura SW</b> per l'<b>alalunga</b> del pomeriggio. Non scommetti su un solo bersaglio: <b>diversifichi</b>, quindi la probabilit&agrave; di tornare con punti &egrave; la pi&ugrave; alta delle tre rotte.</p>
+  <div class="call win"><span class="lab">Finestra d'oro &mdash; solunare in riflusso</span>
+   <b>VEN 26: 09:22&ndash;11:22</b> &nbsp;|&nbsp; <b>SAB 27: 10:09&ndash;12:09</b> &mdash; in quel momento devi essere <b>sullo spot, con le esche in acqua</b>, non in trasferimento. La Rotta A &egrave; costruita perch&eacute; tu sia gi&agrave; in pesca sul bordo NE quando si apre.</div>
+</section>
+
+<!-- PERCHE -->
+<section id="perche">
+  <div class="sec-head"><span class="sec-num">I</span><h2>Perch&eacute; A vince sulle altre due</h2></div>
+  <p class="lead">B punta tutto sul profondo SW (solo alalunga/spada). C resta solo sul bordo NE (solo tonni). <b>A le unisce nell'ordine giusto rispetto al sole e al vento.</b></p>
+  <div class="why">
+    <div class="card">
+      <div class="n">1</div>
+      <h4>Doppia partita</h4>
+      <p>Mattino = <b>il FRONTE</b> (color line del Tevere, vento debole). Pomeriggio = <b>la STRUTTURA</b> (la brezza SW spinge il fronte a costa e fa risalire foraggio sulla scarpata). A pesca prima l'uno, poi l'altra: nessun tempo sprecato sull'acqua sbagliata all'ora sbagliata.</p>
+    </div>
+    <div class="card">
+      <div class="n">2</div>
+      <h4>Finestra d'oro sul pesce giusto</h4>
+      <p>Quando si apre il solunare sei gi&agrave; sull'<b>angolo NE produttivo</b> (CHL pi&ugrave; alta, break sul bordo): &egrave; l&igrave; che abboccano i <b>primi tonni della giornata</b> &mdash; 1.200 punti, il bersaglio di massimo valore. Nel solunare i pesci si alimentano di pi&ugrave;: il tonno mangia presto, sul fronte. C ci arriva, ma A lo sfrutta e poi cambia zona.</p>
+    </div>
+    <div class="card">
+      <div class="n">3</div>
+      <h4>Bersagli diversificati</h4>
+      <p>Tonno sul bordo NE, <b>alalunga</b> sul banco 717 m, <b>spada</b> (bonus raro) sul muro 924 m. Tre specie in tre fasce orarie: se i tonni non ci sono, l'alalunga ti salva la giornata. B e C giocano una carta sola.</p>
+    </div>
+  </div>
+  <div class="call info"><span class="lab">Base del ragionamento</span>Il pesce grosso caccia dove <b>coincidono tre segnali</b>: <b>color line</b> (clorofilla), <b>salto termico</b> (SST) e <b>drop-off / struttura</b> del fondale. La Rotta A &egrave; tracciata per attraversare questi punti di coincidenza nell'ora in cui sono pi&ugrave; attivi (principio confermato dalla letteratura sugli hotspot dei pelagici: fronte CHL + shelfbreak + ore diurne).</div>
+</section>
+
+<!-- MAPPA -->
+<section id="mappa">
+  <div class="sec-head"><span class="sec-num">II</span><h2>La rotta sul campo gara</h2></div>
+  <p class="lead">Carta batimetrica reale (EMODnet) con la Rotta A 1&rarr;8: parti in alto a NE (tonni, fondale che risale) e scendi a SW sulle strutture profonde (scarpata, blu). &Egrave; la stessa base delle mappe interattive.</p>
+  <figure>
+    <div class="rmap"><img src="img/campo_batimetria_rottaA.png" alt="Carta batimetrica EMODnet del campo gara con la Rotta A" style="width:100%;height:auto;display:block;border-radius:3px"></div>
+    <figcaption>Rotta A sulla <b>carta batimetrica EMODnet</b>: il <b>rosso/arancio a NE</b> &egrave; il fondale alto e produttivo (tonni, punti 1&ndash;4); il <b>blu a SW</b> &egrave; la scarpata profonda con banco 717 m e muro 924 m (alalunga/spada, punti 5&ndash;8). Linee sottili = isobate; quadrilatero = campo gara.</figcaption>
+  </figure>
+  <div class="call info"><span class="lab">Legenda profondit&agrave;</span><b>Rosso/giallo</b> = basso (costa NE) &middot; <b>verde</b> = medio &middot; <b>azzurro/blu</b> = profondo (scarpata SW). Il pesce grosso caccia sui <b>gradini</b> tra le fasce di colore (drop-off): l&igrave; passano le isobate fitte.</div>
+  <h3>Schema semplificato (vertici e rotta)</h3>
+  <figure><div class="rmap"><svg viewBox="0 0 584 540" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" font-family="'Public Sans',sans-serif">
+    <polygon points="393.4,32.6 536.1,365.8 216.9,484.7 50.8,179.1" fill="#FAF6E8" stroke="#0E2A40" stroke-width="2" stroke-dasharray="7,5"/>
+    <g transform="translate(40,46)"><line x1="0" y1="20" x2="0" y2="-12" stroke="#0E2A40" stroke-width="2"/><path d="M0,-18 L5,-6 L-5,-6 Z" fill="#0E2A40"/><text x="0" y="-22" text-anchor="middle" fill="#0E2A40" font-size="16" font-weight="700" paint-order="stroke" stroke="#FAF6E8" stroke-width="3.5">N</text></g>
+    <g font-size="15" font-weight="700" font-family="IBM Plex Mono,monospace" fill="#0E2A40" paint-order="stroke" stroke="#FAF6E8" stroke-width="3.5"><circle cx="393" cy="33" r="4" stroke="none"/><circle cx="536" cy="366" r="4" stroke="none"/><circle cx="217" cy="485" r="4" stroke="none"/><circle cx="51" cy="179" r="4" stroke="none"/><text x="401" y="27">V1</text><text x="544" y="366">V2</text><text x="209" y="501" text-anchor="end">V3</text><text x="43" y="179" text-anchor="end">V4</text></g>
+    <polyline points="366.9,80.0 337.0,110.0 374.4,90.0 254.7,200.0 181.4,332.0 199.3,380.0 217.3,320.0 254.7,270.0" fill="none" stroke="#ffffff" stroke-width="7" stroke-opacity="0.8" stroke-linejoin="round"/>
+    <polyline points="366.9,80.0 337.0,110.0 374.4,90.0 254.7,200.0 181.4,332.0 199.3,380.0 217.3,320.0 254.7,270.0" fill="none" stroke="#9C6D14" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="367" cy="80" r="17" fill="none" stroke="#1a7f4b" stroke-width="3.5"/><text x="367" y="58" text-anchor="middle" fill="#0d5a32" font-size="14" font-weight="700" paint-order="stroke" stroke="#FAF6E8" stroke-width="3.5">p.1 08:41</text>
+    <circle cx="255" cy="270" r="17" fill="none" stroke="#0E2A40" stroke-width="3.5" stroke-dasharray="3,2"/><text x="277" y="275" fill="#0E2A40" font-size="14" font-weight="700" paint-order="stroke" stroke="#FAF6E8" stroke-width="3.5">15:30</text>
+    <g font-family="IBM Plex Mono,monospace">
+    <circle cx="367" cy="80" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="367" y="85" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">1</text>
+    <circle cx="337" cy="110" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="337" y="115" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">2</text>
+    <circle cx="374" cy="90" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="374" y="95" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">3</text>
+    <circle cx="255" cy="200" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="255" y="205" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">4</text>
+    <circle cx="181" cy="332" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="181" y="337" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">5</text>
+    <circle cx="199" cy="380" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="199" y="385" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">6</text>
+    <circle cx="217" cy="320" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="217" y="325" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">7</text>
+    <circle cx="255" cy="270" r="13" fill="#9C6D14" stroke="#fff" stroke-width="2.5"/><text x="255" y="275" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">8</text>
+    </g>
+  </svg></div><figcaption>Rotta A: 1&rarr;8 dentro il campo (08:00 &rarr; 15:30). Tonni in alto a NE, alalunga e spada sul profondo SW.</figcaption></figure>
+  <div class="call info"><span class="lab">Campo gara in 3D</span>Prima di pescarlo, ruota e zooma il fondale: <b>marinovinc.github.io/CampoGara3D</b> (aprilo con rete, poi resta in cache offline).</div>
+</section>
+
+<!-- PASSO-PASSO -->
+<section id="passo">
+  <div class="sec-head"><span class="sec-num">III</span><h2>Passo-passo: coordinate, orari, direzione</h2></div>
+  <p class="lead"><b>08:00</b> partenza dal raduno. Punto 1 con <b>un unico trasferimento a 18 kn</b> (canne issate); da l&igrave; in poi <b>sempre velocit&agrave; di traina ~6&ndash;7 kn, canne sempre a mare</b> &mdash; nessun ritiro per spostarsi (richiesta skipper). Gli orari sono i <b>tempi minimi di navigazione</b>: usali come <b>controllo di zona</b>. Se sei in ritardo accorcia le passate; se in anticipo lavora di pi&ugrave; la zona.</p>
+  <ol class="wp">
+    <li class="start"><span class="t">08:00</span> &middot; <span class="mono">41.745 N, 12.243 E</span> &mdash; <b>Raduno Ostia &mdash; START gara</b> (canne issate). <span class="nav">&rarr; WSW (251&deg;) &middot; 12.2 nm &middot; trasferimento 18 kn &rarr; punto 1 alle 08:41.</span></li>
+    <li class="gold"><span class="t">08:41</span> &middot; <span class="mono">41.680 N, 11.985 E</span> &mdash; Start NE in-campo (acqua produttiva): <b>cala lo spread per tonni</b>. <span class="nav">&rarr; SW (225&deg;) &middot; 1.3 nm in traina &rarr; <span class="mono">41.665/11.965</span> alle 08:52.</span></li>
+    <li class="gold"><span class="t">08:52</span> &middot; <span class="mono">41.665 N, 11.965 E</span> &mdash; Bordo NE nel solunare (<b>tonni</b>). <span class="nav">&rarr; ENE (62&deg;) &middot; 1.3 nm &rarr; <span class="mono">41.675/11.990</span> alle 09:03.</span></li>
+    <li class="gold"><span class="t">09:03</span> &middot; <span class="mono">41.675 N, 11.990 E</span> &mdash; <b>Angolo NE in-campo, primi tonni della giornata</b> (cuore del solunare): &egrave; qui e ora che il tonno mangia per primo. <span class="nav">&rarr; SW (227&deg;) &middot; 4.9 nm &rarr; <span class="mono">41.620/11.910</span> alle 09:47.</span></li>
+    <li><span class="t">09:47</span> &middot; <span class="mono">41.620 N, 11.910 E</span> &mdash; Scendi SW verso le strutture profonde. <span class="nav">&rarr; SSW (209&deg;) &middot; 4.5 nm &rarr; <span class="mono">41.554/11.861</span> alle 10:28.</span></li>
+    <li><span class="t">10:28</span> &middot; <span class="mono">41.554 N, 11.861 E</span> &mdash; <b>Banco 717 m: alalunga sull'orlo</b>. <span class="nav">&rarr; SSE (159&deg;) &middot; 1.5 nm &rarr; <span class="mono">41.530/11.873</span> alle 10:41.</span></li>
+    <li><span class="t">10:41</span> &middot; <span class="mono">41.530 N, 11.873 E</span> &mdash; <b>Drop-off 76% / 924 m: spada profondo</b> (bonus raro), stop&amp;go. <span class="nav">&rarr; NNE (17&deg;) &middot; 1.9 nm &rarr; <span class="mono">41.560/11.885</span> alle 10:58.</span></li>
+    <li><span class="t">10:58</span> &middot; <span class="mono">41.560 N, 11.885 E</span> &mdash; Muri / orlo banco lato W. <span class="nav">&rarr; NE (37&deg;) &middot; 1.9 nm &rarr; <span class="mono">41.585/11.910</span> alle 11:15.</span></li>
+    <li><span class="t">11:15</span> &middot; <span class="mono">41.585 N, 11.910 E</span> &mdash; <b>Ultima passata sulle strutture: in pesca fino al cessate</b> (15:30). Ripassa banco e muri finch&eacute; il tempo lo consente, poi rientro a Ostia (fuori gara).</li>
+  </ol>
+  <div class="call"><span class="lab">Margine fino alle 15:30</span>I tempi sopra arrivano in zona a met&agrave; mattina: il tempo restante serve a <b>ripassare e sostare sugli spot</b>. Resta sul triangolo banco 717 m &harr; muro 924 m &harr; orlo W, alternando le passate, fino al cessate.</div>
+</section>
+
+<!-- ASSETTO -->
+<section id="assetto">
+  <div class="sec-head"><span class="sec-num">IV</span><h2>Assetto e rotazione esche</h2></div>
+  <p class="lead"><b>Spread 7 canne</b>, esche in superficie. Quando arrivi sul muro SW aggiungi <b>1 affondata</b>.</p>
+  <div class="call"><span class="lab">Spread &mdash; 7 canne</span>
+    <b>C1/C7</b> flat piombate (15&ndash;25 m) &middot; <b>C2/C6</b> outrigger corto (~40 m) &middot; <b>C3/C5</b> outrigger lungo (60&ndash;70 m) &middot; <b>C4</b> shotgun (~90 m). Sul muro SW: <b>1 canna affondata 2&times;500 g (~11 m)</b>, resto in superficie. <b>Velocit&agrave; 6&ndash;7 kn</b> (6&ndash;6,5 per scendere/tonno, 7 per coprire pi&ugrave; acqua).</div>
+
+  <h3>Le esche jolly: poche esche, pi&ugrave; specie</h3>
+  <p class="lead" style="font-size:.96rem">Non servono dieci esche diverse. Servono <b>poche esche multi-specie</b> montate in <b>taglie scalate</b>: cos&igrave; con 8 canne copri tutte e 8 le prede del periodo.</p>
+  <div class="why">
+    <div class="card">
+      <div class="n" style="color:var(--blu)">J1</div>
+      <h4>Octopus / skirt viola-nero</h4>
+      <p>Il <b>jolly assoluto</b>, colore universale della traina mediterranea. Cambia solo la <b>taglia</b>: grande = tonno rosso; media = alalunga, <b>aguglia imperiale</b>, alletterato, palamita.</p>
+    </div>
+    <div class="card">
+      <div class="n" style="color:var(--verde)">J2</div>
+      <h4>Halco Laser Pro 160</h4>
+      <p>Minnow tuffante, esca principe alalunga. Prende anche <b>tonno striato</b>, alletterato, lampuga e tonnetti. Viola/scuro, una in chrome col sole alto.</p>
+    </div>
+    <div class="card">
+      <div class="n" style="color:var(--oro)">J3</div>
+      <h4>Piuma / piccolo skirt 10&ndash;14 cm</h4>
+      <p>Il <b>jolly del numero</b>: <b>striato</b>, palamita, alletterato, lampuga, alalunga piccola. Verde-giallo / rosa. Sono i pesci che fanno punti a quantit&agrave;.</p>
+    </div>
+  </div>
+  <p style="font-size:.9rem;margin:10px 0 4px"><b>Due specialisti</b> per gli estremi della catena: <b>cedar plug / skirt naturale blu-bianco</b> sullo shotgun (il tonno rosso grande e diffidente, che mangia lontano dalla barca) e <b>calamaro / soft squid naturale</b> affondato a stop&amp;go (spada bonus + alalunga profonda sul muro).</p>
+
+  <h3>Assetto a copertura totale</h3>
+  <table>
+    <tr><th>Canna</th><th>Pos. / dist.</th><th>Esca (jolly)</th><th>Colore</th><th>Specie coperte</th></tr>
+    <tr><td><b>C4</b> shotgun</td><td class="num">~90 m</td><td>Skirt naturale / cedar plug, medio-grande</td><td>blu-bianco / naturale</td><td><span class="tag r">Tonno rosso</span> grande</td></tr>
+    <tr><td><b>C3</b> outr. lungo</td><td class="num">60&ndash;70 m</td><td>Konahead octopus medio <span style="color:var(--ink-3);font-size:.8em">(J1)</span></td><td>viola-nero</td><td>Tonno, alalunga, aguglia imp.</td></tr>
+    <tr><td><b>C5</b> outr. lungo</td><td class="num">60&ndash;70 m</td><td>Halco Laser Pro 160 <span style="color:var(--ink-3);font-size:.8em">(J2)</span></td><td>viola / scuro</td><td>Alalunga, striato, alletterato, lampuga</td></tr>
+    <tr><td><b>C2</b> outr. corto</td><td class="num">~40 m</td><td>Octopus skirt medio <span style="color:var(--ink-3);font-size:.8em">(J1)</span></td><td>viola-nero / rosa</td><td>Aguglia imp., alalunga, palamita</td></tr>
+    <tr><td><b>C6</b> outr. corto</td><td class="num">~40 m</td><td>Piuma / piccolo skirt 10&ndash;14 cm <span style="color:var(--ink-3);font-size:.8em">(J3)</span></td><td>verde-giallo / rosa</td><td>Striato, palamita, alletterato, lampuga</td></tr>
+    <tr><td><b>C1</b> flat</td><td class="num">15&ndash;25 m</td><td>Jet head a getto (bubble)</td><td>viola-nero &rarr; chrome</td><td>Tonno, aguglia imp. (dal wash)</td></tr>
+    <tr><td><b>C7</b> flat</td><td class="num">15&ndash;25 m</td><td>Cedar plug / minnow chrome</td><td>chrome / flash</td><td>Tonno, alalunga, striato</td></tr>
+    <tr><td><b>Affond.</b> <span style="color:var(--ink-3);font-size:.78em">(poi)</span></td><td class="num">~11 m</td><td>Rapala X-Rap Magnum (deep diver) / calamaro affondato</td><td>naturale</td><td><span class="tag b">Spada</span> (bonus), alalunga profonda</td></tr>
+  </table>
+  <div class="call info"><span class="lab">Logica dell'assetto</span><b>Taglie scalate</b> (grande sullo shotgun &rarr; piccolo del numero sull'outrigger corto) = copri dal tonno rosso al pesce da numero. <b>Viola-nero che domina</b> nel solunare (sole basso), <b>1&ndash;2 chrome/flash</b> col sole alto. Le esche jolly si ripetono in pi&ugrave; posizioni: porti meno scatole e copri pi&ugrave; specie.</div>
+  <div class="call"><span class="lab">Onest&agrave;</span>Questo &egrave; un assetto <b>proposto</b>, da tarare sulla tua cassetta: l'unica esca citata dal briefing &egrave; la <b>Halco LP160 viola</b>. Marche/modelli sono esempi della classica traina d'altura mediterranea, non prescrizioni.</div>
+
+  <h3>Le esche in figura</h3>
+  <p class="lead" style="font-size:.94rem">Le sei esche dell'assetto, per riconoscerle a colpo d'occhio: <b>3 jolly</b> (J1&ndash;J3) + <b>2 specialisti</b> + l'affondata. <span style="color:var(--ink-3);font-size:.92em"><b>Foto prodotto reali</b> degli artificiali (set Forio/Roma). I modelli sono quelli gi&agrave; scelti dal team &mdash; tara taglia/colore sulla tua cassetta.</span> <span style="font-size:.92em">Il <b style="color:var(--rosso)">badge rosso</b> in alto a sinistra dice <b>su quale canna</b> va l'esca e l'ordine: <b>1&ordf;</b> = la cali allo start (08:41); <b>poi</b> = la aggiungi dopo.</span></p>
+  <style>
+  .lures{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:12px 0}
+  @media(min-width:680px){.lures{grid-template-columns:1fr 1fr 1fr}}
+  .lure{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .lure svg,.lure img{display:block;width:100%;height:auto;background:linear-gradient(#eef4fa,#d6e3ef)}
+  .lure img{aspect-ratio:16/10;object-fit:cover}
+  .lure.ph::after{content:"FOTO";position:absolute;top:7px;right:7px;background:var(--verde);color:#fff;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;padding:1px 7px;border-radius:10px}
+  .lure .rod{position:absolute;top:7px;left:7px;z-index:2;background:var(--rosso);color:#fff;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.03em;padding:1px 8px;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .lure .rod.late{background:#7F7C73}
+  .lure.first{outline:2px solid var(--rosso);outline-offset:-2px}
+  .lure .cap{padding:8px 11px 11px}
+  .lure .cap b{font-family:var(--serif);color:var(--blu);font-size:.96rem;display:block}
+  .lure .cap .sp{font-size:.8rem;color:var(--ink-2);display:block;margin-top:3px;line-height:1.35}
+  .lure .cap .col{font-family:var(--mono);font-size:.72rem;color:var(--ink-3);display:block;margin-top:4px}
+  .lure .tagj{display:inline-block;font-family:var(--mono);font-size:.66rem;font-weight:600;color:#fff;background:var(--blu);border-radius:20px;padding:1px 7px;margin-right:5px;vertical-align:1px}
+  </style>
+  <div class="lures">
+
+    <div class="lure ph first">
+      <span class="rod">1&ordf; &middot; C3/C2</span>
+      <img src="img/esche/forio/forio_05.jpg" alt="Kona slant-head skirted">
+      <div class="cap"><b><span class="tagj">J1</span>Kona slant-head (skirt)</b>
+        <span class="sp">Tonno rosso, alalunga, aguglia imp., alletterato, palamita</span>
+        <span class="col">viola/argento &middot; niente paletta, rende lontano</span></div>
+    </div>
+
+    <div class="lure ph first">
+      <span class="rod">1&ordf; &middot; C5</span>
+      <img src="img/esche/forio/forio_01.png" alt="Halco Laser Pro 160">
+      <div class="cap"><b><span class="tagj">J2</span>Halco Laser Pro 160</b>
+        <span class="sp">Alalunga (principe), tonno striato, alletterato, lampuga</span>
+        <span class="col">viola/scuro &middot; 1 chrome col sole alto</span></div>
+    </div>
+
+    <div class="lure ph first">
+      <span class="rod">1&ordf; &middot; C6</span>
+      <img src="img/esche/forio/forio_09.jpg" alt="Williamson Flash Feather">
+      <div class="cap"><b><span class="tagj">J3</span>Williamson Flash Feather</b>
+        <span class="sp">Tonno striato, palamita, alletterato, lampuga &mdash; ottima anche su spada</span>
+        <span class="col">piuma blu/bianco &middot; movimento sinuoso</span></div>
+    </div>
+
+    <div class="lure ph first">
+      <span class="rod">1&ordf; &middot; C4 shotgun</span>
+      <img src="img/esche/forio/forio_06.jpg" alt="Bullet head skirted">
+      <div class="cap"><b>Bullet head skirted</b>
+        <span class="sp">Tonno rosso grande e diffidente &mdash; esca regina dello shotgun (~90 m)</span>
+        <span class="col">viola/nero o viola/argento</span></div>
+    </div>
+
+    <div class="lure ph first">
+      <span class="rod">1&ordf; &middot; C1/C7 flat</span>
+      <img src="img/esche/forio/forio_08.jpg" alt="Williamson Pulpito">
+      <div class="cap"><b>Williamson Pulpito (pusher)</b>
+        <span class="sp">Tonno, aguglia imp. &mdash; spruzzo e turbolenza in posizione media/flat</span>
+        <span class="col">acqua + gonna &middot; viola-nero / blu</span></div>
+    </div>
+
+    <div class="lure ph">
+      <span class="rod late">poi &middot; affondata</span>
+      <img src="img/esche/forio/forio_03.png" alt="Rapala X-Rap Magnum deep diver">
+      <div class="cap"><b>Rapala X-Rap Magnum</b>
+        <span class="sp">Alalunga profonda + gi&ugrave; sul muro &mdash; deep diver (modo legale per scendere)</span>
+        <span class="col">naturale &middot; paletta lunga, scende da solo</span></div>
+    </div>
+
+  </div>
+
+  <div class="call win"><span class="lab">Cala per prime &mdash; 08:41, sole basso (tonni sul bordo NE)</span>
+    Allo start cali le <b>5 esche scure/viola</b> col bordo <span style="color:var(--rosso)">rosso</span> (badge <b>1&ordf;</b>), in quest'ordine di canna:
+    <ol style="margin:6px 0 2px;padding-left:20px">
+      <li><b>C4 shotgun</b> (~90 m) &mdash; <b>Bullet head viola/nero</b>: il pezzo grosso mangia lontano dalla barca. Cala questa per prima.</li>
+      <li><b>C3 e C5 outrigger lunghi</b> (60&ndash;70 m) &mdash; <b>Kona slant-head</b> (C3) e <b>Halco LP160 viola</b> (C5).</li>
+      <li><b>C2 e C6 outrigger corti</b> (~40 m) &mdash; <b>Kona</b> (C2) e <b>Flash Feather</b> (C6).</li>
+      <li><b>C1 e C7 flat</b> (15&ndash;25 m, nella schiuma) &mdash; <b>Pulpito</b> (bolle) e una scura sul wash.</li>
+    </ol>
+    L'<b>affondata</b> (Rapala X-Rap Magnum, badge grigio <b>poi</b>) <b>non</b> va allo start: si aggiunge dopo, sul muro SW (punto 7, ~10:41). Le esche della fila qui sotto sono <b>cambi</b>, non start.</div>
+
+  <h3 style="font-size:1.06rem">Alternative dalla cassetta <span style="font-weight:400;color:var(--ink-3);font-size:.82rem">(altre esche del set Forio/Roma)</span></h3>
+  <div class="lures">
+
+    <div class="lure ph">
+      <img src="img/esche/forio/forio_02.png" alt="Halco Laser Pro 160 XDD">
+      <div class="cap"><b>Halco Laser Pro 160 XDD</b>
+        <span class="sp">Variante che scende di pi&ugrave; &mdash; alalunga / tonno sul profondo</span>
+        <span class="col">vuole acqua pulita &middot; con mono 30 lb tienilo vicino</span></div>
+    </div>
+
+    <div class="lure ph">
+      <img src="img/esche/forio/forio_04.jpg" alt="Williamson Sailfish Catcher">
+      <div class="cap"><b>Williamson Sailfish Catcher</b>
+        <span class="sp">Tonni / aguglia &mdash; flat nella schiuma dei motori</span>
+        <span class="col">rosa/bianco &middot; re vero appena sganciato</span></div>
+    </div>
+
+    <div class="lure ph">
+      <img src="img/esche/forio/forio_07.jpg" alt="Cube flat-face skirted">
+      <div class="cap"><b>Cube flat-face skirted</b>
+        <span class="sp">Tunnidi &mdash; profilo per traina veloce, richiamo da lontano</span>
+        <span class="col">testa cubica &middot; rosa/bianco</span></div>
+    </div>
+
+    <div class="lure ph">
+      <img src="img/esche/forio/forio_10.png" alt="Cucchiaino ondulante">
+      <div class="cap"><b>Cucchiaino ondulante</b>
+        <span class="sp">Striati, tonnetti, pesci di branco &mdash; flash leggero</span>
+        <span class="col">argento &middot; classico del numero</span></div>
+    </div>
+
+    <div class="lure ph">
+      <img src="img/esche/forio/forio_11.jpg" alt="Williamson Popper Pro">
+      <div class="cap"><b>Williamson Popper Pro</b>
+        <span class="sp">Flash puro, niente gonna &mdash; riflessi a sole alto</span>
+        <span class="col">naturale/chrome &middot; ondulante</span></div>
+    </div>
+
+  </div>
+
+  <h3>Esche per ora e luce</h3>
+  <table>
+    <tr><th>Fascia oraria</th><th>Luce</th><th>Esca &amp; bersaglio</th></tr>
+    <tr><td>08:00&ndash;10:30</td><td>Sole basso</td><td><b>Scure / viola di silhouette</b> &mdash; tonni e aguglia imperiale sul bordo NE (superficie).</td></tr>
+    <tr><td>10:30&ndash;14:00</td><td>Sole alto</td><td>Scendendo SW: <b>alalunga</b> sull'orlo del banco (<b>Halco Laser Pro 160 viola</b>); 1 affondata sul muro.</td></tr>
+    <tr><td>14:00&ndash;15:30</td><td>Sole calante</td><td>Alalunga / tunnidi: pi&ugrave; <b>chrome / flash</b> col calo di luce.</td></tr>
+  </table>
+  <h3>Esche pi&ugrave; pescanti per specie</h3>
+  <table>
+    <tr><th>Specie</th><th>Esca</th><th>Colore / quando</th></tr>
+    <tr><td><span class="tag r">Tonno rosso</span></td><td>Konahead / skirted, cedar plug; naturale a traina lenta</td><td>Scuri/viola, blu-bianco &middot; 6&ndash;6,5 kn</td></tr>
+    <tr><td><span class="tag s">Alalunga</span></td><td><b>Halco Laser Pro 160</b>, minnow affondanti, piccoli skirted</td><td>Viola/scuro, rosa-bianco &middot; ~6,5 kn</td></tr>
+    <tr><td><span class="tag b">Spada</span> <span style="color:var(--ink-3);font-size:.8em">(bonus raro)</span></td><td>Calamaro / naturale a stop&amp;go in profondit&agrave;</td><td>Naturale &middot; alba / cambio luce</td></tr>
+  </table>
+
+  <h3>Dove sono le altre prede</h3>
+  <p class="lead" style="font-size:.96rem">Aguglia imperiale e tonni striati sono <b>pelagici di superficie del fronte NE</b>: cadono nel <b>primo tratto della Rotta A (punti 1&ndash;4)</b>, in superficie, nel solunare. Per loro non cambi piano &mdash; sono gi&agrave; sulla tua rotta.</p>
+  <table>
+    <tr><th>Preda</th><th>Dove (spot)</th><th class="num">Quota</th><th>Quando</th></tr>
+    <tr><td><b>Aguglia imperiale</b><br><span style="color:var(--ink-3);font-size:.82em">Tetrapturus belone &middot; &ge;130 cm &middot; &times;1</span></td>
+      <td><b>Bordo NE / color line</b> <span class="tag s">ALTA</span><br>Orlo banco 717 m <span class="tag b">MEDIA</span><br>Scarpata SW <span class="tag r">BASSA</span></td>
+      <td class="num">Superficie<br>0&ndash;6 m</td>
+      <td>Solunare, mattino col fronte stabile. Stesso punteggio dello spada ma <b>molto pi&ugrave; catturabile</b>: bersaglio chiave per i punti.</td></tr>
+    <tr><td><b>Tonno striato / tonnetto</b><br><span style="color:var(--ink-3);font-size:.82em">(+ alletterato, palamita) &middot; &ge;60 cm &middot; &times;1</span></td>
+      <td><b>Bordo NE produttivo</b> + <b>sopra il banco</b>, lato blu della color line <span class="tag s">ALTA</span></td>
+      <td class="num">Superficie<br>0&ndash;6 m</td>
+      <td>Branchi che seguono il foraggio sul fronte: <b>tutto il giorno</b>, meglio sul fronte attivo. Fanno numero.</td></tr>
+    <tr><td><b>Lampuga</b><br><span style="color:var(--ink-3);font-size:.82em">&ge;60 cm &middot; &times;1</span></td>
+      <td>Vicino a <b>legni e relitti</b> galleggianti, ovunque sul percorso</td>
+      <td class="num">Superficie</td>
+      <td>Se avvisti un legno/oggetto galleggiante: passaci accanto, spesso ci sono sotto.</td></tr>
+  </table>
+  <div class="call info"><span class="lab">Conseguenza pratica</span>Il <b>bordo NE in superficie (punti 1&ndash;4)</b> non &egrave; solo per i tonni: &egrave; la zona di <b>aguglia imperiale + striati + tunnidi minori</b>. Lavoralo bene nel solunare con spread 0&ndash;6 m &mdash; &egrave; il tratto che fa pi&ugrave; numero, non solo il pezzo grosso.</div>
+</section>
+
+<!-- COMPORTAMENTO -->
+<section id="comportamento">
+  <div class="sec-head"><span class="sec-num">V</span><h2>Come comportarsi durante la gara</h2></div>
+  <ul class="chk">
+    <li><b>Sii sullo spot prima della finestra d'oro.</b> Alle 09:03 (VEN) / nel solunare devi gi&agrave; trainare sul bordo NE, non navigare.</li>
+    <li><b>Traina il bordo blu, non l'acqua verde piena.</b> Il pesce grosso caccia <i>sul confine</i> tra il verde del Tevere e il blu del mare (la color line).</li>
+    <li><b>Stop&amp;go quando l'ecoscandaglio marca:</b> rallenta / folle per far affondare le esche, poi riprendi. Fallo sul <b>tratto dritto</b>, mai in virata stretta (le esche si intrecciano).</li>
+    <li><b>MANGIANZA in radio &rarr; CONVERGI.</b> Molla il piano e vai: il pesce che mangia batte qualsiasi mappa.</li>
+    <li><b>Usa gli orari come controllo zona.</b> In ritardo: accorcia le passate. In anticipo: lavora di pi&ugrave; lo spot.</li>
+    <li><b>Pomeriggio sulla struttura.</b> Quando la brezza SW rinforza, il fronte si sposta a costa: resta sul banco/muri SW dove l'upwelling porta su il foraggio.</li>
+    <li><b>Canne sempre a mare</b> dopo il primo trasferimento: niente ritiri per spostarsi (richiesta skipper).</li>
+  </ul>
+  <div class="call win"><span class="lab">Regola d'oro</span>Il piano serve a metterti nell'acqua giusta all'ora giusta. Ma se il pesce mangia altrove, <b>il pesce ha sempre ragione</b>: converge sulla mangianza.</div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist">
+  <div class="sec-head"><span class="sec-num">VI</span><h2>Checklist lampo</h2></div>
+  <ul class="chk">
+    <li>08:00 START &rarr; trasferimento unico 18 kn WSW al punto 1 (08:41).</li>
+    <li>Cala lo spread 7 canne sul bordo NE; esche scure/viola.</li>
+    <li>Finestra d'oro: martella l'angolo NE per i tonni.</li>
+    <li>Met&agrave; mattina: scendi SW su banco 717 m &rarr; alalunga (Halco LP160 viola).</li>
+    <li>Sul muro 924 m: 1 affondata, stop&amp;go &rarr; spada (bonus).</li>
+    <li>Pomeriggio: ripassa il triangolo banco&harr;muro&harr;orlo W fino alle 15:30.</li>
+    <li>Radio accesa: qualsiasi mangianza &rarr; converge.</li>
+  </ul>
+</section>
+
+<!-- CONFRONTO -->
+<section id="confronto">
+  <div class="sec-head"><span class="sec-num">VII</span><h2>A &middot; B &middot; C a confronto</h2></div>
+  <p class="lead">Perch&eacute; scegliere A in una riga: copre <b>entrambe le partite</b> e <b>diversifica i bersagli</b>. B e C giocano una carta sola.</p>
+  <table>
+    <tr><th>Rotta</th><th>Zona</th><th>Bersagli</th><th>Quando sceglierla</th><th>Resa</th></tr>
+    <tr style="outline:2px solid var(--oro);outline-offset:-2px">
+      <td><b style="color:var(--oro)">A</b> <span style="font-size:.78em;color:var(--ink-3)">consigliata</span></td>
+      <td>NE in-campo &rarr; scarpata SW</td>
+      <td><span class="tag r">Tonno</span> <span class="tag s">Alalunga</span> <span class="tag b">Spada</span></td>
+      <td>Sempre: &egrave; la scelta di default, bilanciata</td>
+      <td><b>Pi&ugrave; alta e costante</b> &mdash; se i tonni non escono, l'alalunga salva la giornata</td></tr>
+    <tr>
+      <td><b style="color:var(--verde)">B</b></td>
+      <td>Tutta scarpata profonda SW</td>
+      <td><span class="tag s">Alalunga</span> <span class="tag b">Spada</span></td>
+      <td>Se punti deciso al profondo / acqua blu</td>
+      <td>Cattura pi&ugrave; "di mestiere" (alalunga numerosa), ma niente tonni</td></tr>
+    <tr>
+      <td><b style="color:var(--rosso)">C</b></td>
+      <td>Tutto bordo NE produttivo</td>
+      <td><span class="tag r">Tonno</span> + aguglia</td>
+      <td>Solo se la giornata &egrave; da tonni e la flotta marca l&igrave;</td>
+      <td>Massimo punteggio se vanno i tonni, ma rischio giornata vuota</td></tr>
+  </table>
+  <div class="call info"><span class="lab">In sintesi</span><b>A</b> = massima probabilit&agrave; di fare punti (bilanciata). <b>C</b> = pi&ugrave; rischio ma punti tonno se la giornata gira. <b>B</b> = la pescata pi&ugrave; "sicura" in numero (alalunga). Le rese sono qualitative, basate sui segnali (fronte + struttura + ore), non su percentuali.</div>
+</section>
+
+<div class="foot">
+  Rotta A &middot; Gara di traina d'altura Ostia 2026 &middot; documento operativo di bordo<br>
+  Coordinate, orari e assetto dalla Guida Rapida Barca. Le valutazioni di resa seguono il principio fronte CHL + struttura + ore diurne (non probabilit&agrave; numeriche).<br>
+  Carta fondali: &copy; EMODnet Bathymetry / Esri. Foto prodotto esche dai cataloghi dei produttori (Halco, Williamson, Rapala) tramite il briefing Forio/Roma &mdash; uso personale di bordo.
+</div>
+
+</div>
+</body>
+</html>
